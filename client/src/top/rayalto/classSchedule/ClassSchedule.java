@@ -107,6 +107,7 @@ public class ClassSchedule {
                 | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        new ClassSchedule();
+        // new ClassSchedule();
+        new MainFrame();
     }
 }
