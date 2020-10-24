@@ -6,7 +6,6 @@ import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,36 +16,42 @@ public class SideBar extends JPanel {
     private static final long serialVersionUID = 1L;
 
     public JLabel sideBarBanner = new JLabel(Sources.SIDEBAR_BANNER_UNFOLF_IMAGE);
-    public JPanel buttonsPanel = new JPanel(new GridLayout(13, 0));
+    public JPanel buttonsPanel = new JPanel(new GridLayout(14, 0));
     public JScrollPane scrollButtonsPanel = new JScrollPane(buttonsPanel);
-    public JButton button1 = new JButton("button1");
-    public JButton button2 = new JButton("button2");
-    public JButton button3 = new JButton("button3");
-    public JButton button4 = new JButton("button4");
-    public JButton button5 = new JButton("button5");
-    public JButton button6 = new JButton("button6");
-    public JButton button7 = new JButton("button7");
-    public JButton button8 = new JButton("button8");
-    public JButton button9 = new JButton("button9");
-    public JButton button10 = new JButton("button10");
-    public JButton button11 = new JButton("button11");
-    public JButton button12 = new JButton("button12");
-    public JButton button13 = new JButton("button13");
+    public SideBarButton homeButton = new SideBarButton("homeButton");
+    public SideBarButton button1 = new SideBarButton("button1");
+    public SideBarButton button2 = new SideBarButton("button2");
+    public SideBarButton button3 = new SideBarButton("button3");
+    public SideBarButton button4 = new SideBarButton("button4");
+    public SideBarButton button5 = new SideBarButton("button5");
+    public SideBarButton button6 = new SideBarButton("button6");
+    public SideBarButton button7 = new SideBarButton("button7");
+    public SideBarButton button8 = new SideBarButton("button8");
+    public SideBarButton button9 = new SideBarButton("button9");
+    public SideBarButton button10 = new SideBarButton("button10");
+    public SideBarButton button11 = new SideBarButton("button11");
+    public SideBarButton button12 = new SideBarButton("button12");
+    public SideBarButton button13 = new SideBarButton("button13");
 
     private boolean _folded = false;
 
     public SideBar() {
+        setBackground(Color.DARK_GRAY);
+        buttonsPanel.setBackground(Color.DARK_GRAY);
+        scrollButtonsPanel.setBackground(Color.DARK_GRAY);
         setLayout(null);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 Dimension sideBarSize = getSize();
-                sideBarBanner.setBounds(0, 0, sideBarSize.width, 50);
-                scrollButtonsPanel.setBounds(0, 50, sideBarSize.width, sideBarSize.height - 50);
+                sideBarBanner.setSize(sideBarSize.width, 50);
+                scrollButtonsPanel.setSize(sideBarSize.width, sideBarSize.height > 500 ? 440 : sideBarSize.height - 50);
             }
         });
-        setBackground(Color.BLUE);
         add(sideBarBanner);
+        sideBarBanner.setLocation(0, 0);
+        sideBarBanner.setSize(230, 50);
+        buttonsPanel.add(homeButton);
         buttonsPanel.add(button1);
         buttonsPanel.add(button2);
         buttonsPanel.add(button3);
@@ -61,14 +66,16 @@ public class SideBar extends JPanel {
         buttonsPanel.add(button12);
         buttonsPanel.add(button13);
         scrollButtonsPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollButtonsPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrollButtonsPanel);
+        scrollButtonsPanel.setLocation(0, 50);
     }
 
     public boolean isFolded() {
         return _folded;
     }
 
-    public void setFold(boolean fold) {
+    public void fold(boolean fold) {
         if (fold && !_folded) {
             sideBarBanner.setIcon(Sources.SIDEBAR_BANNER_FOLF_IMAGE);
             _folded = true;
@@ -76,5 +83,8 @@ public class SideBar extends JPanel {
             sideBarBanner.setIcon(Sources.SIDEBAR_BANNER_UNFOLF_IMAGE);
             _folded = false;
         }
+        Dimension sideBarSize = getSize();
+        sideBarBanner.setSize(sideBarSize.width, 50);
+        scrollButtonsPanel.setSize(sideBarSize.width, sideBarSize.height > 500 ? 440 : sideBarSize.height - 50);
     }
 }
