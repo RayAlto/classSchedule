@@ -1,12 +1,9 @@
 package top.rayalto.classSchedule;
 
-import javax.swing.JButton;
-
 import java.awt.Color;
 import java.awt.Graphics;
-import java.io.IOException;
-import java.awt.Font;
-import java.awt.FontFormatException;
+
+import javax.swing.JButton;
 
 public class SideBarButton extends JButton {
 

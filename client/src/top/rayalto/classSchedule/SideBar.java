@@ -119,7 +119,7 @@ public class SideBar extends JPanel {
             lessonTypeButton.setText(null);
             examModeButton.setText(null);
             userButton.setText(null);
-        }else{
+        } else {
             homeButton.setText("主　　页");
             scheduleButton.setText("课程时间");
             lessonButton.setText("课程列表");
