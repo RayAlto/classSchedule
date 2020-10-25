@@ -4,6 +4,9 @@ import javax.swing.JButton;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.IOException;
+import java.awt.Font;
+import java.awt.FontFormatException;
 
 public class SideBarButton extends JButton {
 
@@ -16,6 +19,8 @@ public class SideBarButton extends JButton {
         this(null);
         setBackground(Color.DARK_GRAY);
         setForeground(Color.WHITE);
+        setIconTextGap(45);
+        setFont(Sources.NOTO_SANS_MONO_FONT());
     }
 
     public SideBarButton(String text) {
@@ -23,6 +28,8 @@ public class SideBarButton extends JButton {
         super.setContentAreaFilled(false);
         setBackground(Color.DARK_GRAY);
         setForeground(Color.WHITE);
+        setIconTextGap(45);
+        setFont(Sources.NOTO_SANS_MONO_FONT());
     }
 
     @Override

@@ -19,19 +19,19 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         setLayout(null);
-        setSize(500, 537);
+        setSize(404, 739);
         add(sideBar);
-        sideBar.setBounds(0, 0, 230, 500);
+        sideBar.setBounds(0, 0, 230, 702);
         add(foldButton);
+        System.out.println(foldButton.getFont().getSize());
         foldButton.setLocation(230, 0);
         foldButton.setSize(foldButton.getPreferredSize());
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 Dimension frameSize = getSize();
-                int sideBarWidth = sideBar.isFolded() ? 66 : 230;
-                int sideBarHeight = frameSize.height > 537 ? 500 : frameSize.height - 37;
-                sideBar.setSize(sideBarWidth, sideBarHeight);
+                int sideBarWidth = sideBar.isFolded() ? 75 : 230;
+                sideBar.setSize(sideBarWidth, frameSize.height - 37);
             }
         });
         foldButton.addActionListener(new ActionListener() {
@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
             sideBar.setSize(230, sideBar.getSize().height);
             sideBar.fold(false);
         } else if (!sideBar.isFolded() && fold) {
-            sideBar.setSize(66, sideBar.getSize().height);
+            sideBar.setSize(75, sideBar.getSize().height);
             sideBar.fold(true);
         }
     }
