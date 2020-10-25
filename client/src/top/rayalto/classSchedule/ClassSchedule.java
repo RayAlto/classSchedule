@@ -1,10 +1,5 @@
 package top.rayalto.classSchedule;
 
-import top.rayalto.classSchedule.dataTypes.UserConfig;
-import top.rayalto.classSchedule.database.DatabaseEntity;
-import top.rayalto.classSchedule.frames.LoginFrame;
-import top.rayalto.classSchedule.frames.MainFrame;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -15,6 +10,11 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import top.rayalto.classSchedule.dataTypes.UserConfig;
+import top.rayalto.classSchedule.database.DatabaseEntity;
+import top.rayalto.classSchedule.frames.LoginFrame;
+import top.rayalto.classSchedule.frames.MainFrame;
 
 public class ClassSchedule {
     private UserConfig userConfig = null;
