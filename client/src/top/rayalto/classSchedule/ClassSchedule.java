@@ -1,5 +1,10 @@
 package top.rayalto.classSchedule;
 
+import top.rayalto.classSchedule.dataTypes.UserConfig;
+import top.rayalto.classSchedule.database.DatabaseEntity;
+import top.rayalto.classSchedule.frames.LoginFrame;
+import top.rayalto.classSchedule.frames.MainFrame;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -13,7 +18,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class ClassSchedule {
     private UserConfig userConfig = null;
-    private DatabaseEntity databaseEntity = new DatabaseEntity();
 
     private LoginFrame loginFrame = null;
     private Object loginLock = new Object();
@@ -59,7 +63,7 @@ public class ClassSchedule {
         loginFrame.loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (databaseEntity.login(loginFrame.usernameTextField.getText(),
+                if (DatabaseEntity.login(loginFrame.usernameTextField.getText(),
                         String.valueOf(loginFrame.passwordTextField.getPassword()))) {
                     JOptionPane.showMessageDialog(loginFrame, "欢迎使用", "登陆成功", JOptionPane.INFORMATION_MESSAGE);
                     userConfig.setConfig("user.username", loginFrame.usernameTextField.getText());

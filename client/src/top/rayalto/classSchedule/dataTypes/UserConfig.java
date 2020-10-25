@@ -1,4 +1,4 @@
-package top.rayalto.classSchedule;
+package top.rayalto.classSchedule.dataTypes;
 
 import java.io.File;
 import java.io.FileInputStream;

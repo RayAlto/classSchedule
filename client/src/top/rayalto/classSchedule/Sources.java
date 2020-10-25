@@ -36,20 +36,15 @@ public class Sources {
             Sources.class.getResource("/res/images/teacherIcon.png"));
     public static final ImageIcon SIDEBAR_USER_ICON_IMAGE = new ImageIcon(
             Sources.class.getResource("/res/images/userIcon.png"));
-    private static Font NOTO_SANS_MONO_FONT = null;
+    public static Font NOTO_SANS_MONO_FONT = null;
 
-    private static boolean _created = false;
-
-    public static final Font NOTO_SANS_MONO_FONT() {
-        if (!_created) {
-            try {
-                NOTO_SANS_MONO_FONT = Font.createFont(Font.TRUETYPE_FONT,
-                        Sources.class.getResourceAsStream("/res/fonts/NotoSansMonoCJKsc-Regular.otf"));
-                NOTO_SANS_MONO_FONT = NOTO_SANS_MONO_FONT.deriveFont(15.0f);
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-            }
+    static {
+        try {
+            NOTO_SANS_MONO_FONT = Font.createFont(Font.TRUETYPE_FONT,
+                    Sources.class.getResourceAsStream("/res/fonts/NotoSansMonoCJKsc-Regular.otf"));
+            NOTO_SANS_MONO_FONT = NOTO_SANS_MONO_FONT.deriveFont(15.0f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
         }
-        return NOTO_SANS_MONO_FONT;
     }
 }

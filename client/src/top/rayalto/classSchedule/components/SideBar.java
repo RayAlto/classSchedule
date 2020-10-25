@@ -1,4 +1,6 @@
-package top.rayalto.classSchedule;
+package top.rayalto.classSchedule.components;
+
+import top.rayalto.classSchedule.Sources;
 
 import java.awt.Color;
 import java.awt.Dimension;

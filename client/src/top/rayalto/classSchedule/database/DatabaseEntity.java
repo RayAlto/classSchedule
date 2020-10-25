@@ -1,4 +1,4 @@
-package top.rayalto.classSchedule;
+package top.rayalto.classSchedule.database;
 
 import java.math.BigInteger;
 
@@ -14,9 +14,9 @@ import org.mariadb.jdbc.MariaDbPoolDataSource;
 
 public class DatabaseEntity {
 
-    private MariaDbPoolDataSource poolDataSource = new MariaDbPoolDataSource();
+    private static MariaDbPoolDataSource poolDataSource = new MariaDbPoolDataSource();
 
-    public DatabaseEntity() {
+    static {
         System.out.print("connecting to database ... ");
         try {
             poolDataSource.setServerName("www.rayalto.top");
@@ -32,7 +32,7 @@ public class DatabaseEntity {
         System.out.println("done");
     }
 
-    public boolean login(String username, String password) {
+    public static boolean login(String username, String password) {
         System.out.format("try to login with username: %s, password: %s%n", username, password);
         String passwordHash = null;
         try (Connection connection = poolDataSource.getConnection()) {

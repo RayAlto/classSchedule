@@ -1,4 +1,6 @@
-package top.rayalto.classSchedule;
+package top.rayalto.classSchedule.frames;
+
+import top.rayalto.classSchedule.Sources;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -33,27 +35,27 @@ public class LoginFrame extends JFrame {
         add(loginBannerLabel);
         loginBannerLabel.setBounds(0, 0, 500, 100);
         add(usernameLabel);
-        usernameLabel.setFont(Sources.NOTO_SANS_MONO_FONT());
+        usernameLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         usernameLabel.setBounds(81, 100, 48, 30);
         add(passwordLabel);
-        passwordLabel.setFont(Sources.NOTO_SANS_MONO_FONT());
+        passwordLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         passwordLabel.setBounds(81, 130, 48, 30);
         add(usernameTextField);
-        usernameTextField.setFont(Sources.NOTO_SANS_MONO_FONT());
+        usernameTextField.setFont(Sources.NOTO_SANS_MONO_FONT);
         usernameTextField.setBounds(129, 103, 200, 24);
         usernameTextField.setToolTipText("学校教务系统账号的用户名，也就是学号，一般是10位数字。");
         add(passwordTextField);
-        passwordLabel.setFont(Sources.NOTO_SANS_MONO_FONT());
+        passwordLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         passwordTextField.setBounds(129, 133, 200, 24);
         passwordTextField.setToolTipText("学校教务系统账号的密码，一般是自己设置的。");
         add(rememberUsernameCheckBox);
-        rememberUsernameCheckBox.setFont(Sources.NOTO_SANS_MONO_FONT());
+        rememberUsernameCheckBox.setFont(Sources.NOTO_SANS_MONO_FONT);
         rememberUsernameCheckBox.setBounds(333, 103, 86, 24);
         add(rememberPasswordCheckBox);
-        rememberPasswordCheckBox.setFont(Sources.NOTO_SANS_MONO_FONT());
+        rememberPasswordCheckBox.setFont(Sources.NOTO_SANS_MONO_FONT);
         rememberPasswordCheckBox.setBounds(333, 133, 86, 24);
         add(loginButton);
-        loginButton.setFont(Sources.NOTO_SANS_MONO_FONT());
+        loginButton.setFont(Sources.NOTO_SANS_MONO_FONT);
         loginButton.setBounds(125, 170, 250, 50);
         setLocation((screenSize.width - loginFrameSize.width) / 2, (screenSize.height - loginFrameSize.height) / 2);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

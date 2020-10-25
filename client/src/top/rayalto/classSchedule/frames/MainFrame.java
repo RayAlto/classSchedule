@@ -1,4 +1,6 @@
-package top.rayalto.classSchedule;
+package top.rayalto.classSchedule.frames;
+
+import top.rayalto.classSchedule.components.SideBar;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;

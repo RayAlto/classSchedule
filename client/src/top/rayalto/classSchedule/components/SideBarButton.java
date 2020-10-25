@@ -1,4 +1,6 @@
-package top.rayalto.classSchedule;
+package top.rayalto.classSchedule.components;
+
+import top.rayalto.classSchedule.Sources;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -17,7 +19,7 @@ public class SideBarButton extends JButton {
         setBackground(Color.DARK_GRAY);
         setForeground(Color.WHITE);
         setIconTextGap(45);
-        setFont(Sources.NOTO_SANS_MONO_FONT());
+        setFont(Sources.NOTO_SANS_MONO_FONT);
     }
 
     public SideBarButton(String text) {
@@ -26,7 +28,7 @@ public class SideBarButton extends JButton {
         setBackground(Color.DARK_GRAY);
         setForeground(Color.WHITE);
         setIconTextGap(45);
-        setFont(Sources.NOTO_SANS_MONO_FONT());
+        setFont(Sources.NOTO_SANS_MONO_FONT);
     }
 
     @Override
