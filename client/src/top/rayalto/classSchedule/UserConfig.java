@@ -44,6 +44,8 @@ public class UserConfig {
             Files.setPosixFilePermissions(configFileDirPath, configFilePermissions);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (UnsupportedOperationException e) {
+            System.out.println("current operator system does not support POSIX file systems");
         }
     }
 

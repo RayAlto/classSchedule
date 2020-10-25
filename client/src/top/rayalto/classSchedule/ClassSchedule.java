@@ -15,11 +15,15 @@ public class ClassSchedule {
     private UserConfig userConfig = null;
     private DatabaseEntity databaseEntity = new DatabaseEntity();
 
+    private LoginFrame loginFrame = null;
     private Object loginLock = new Object();
+    private boolean logged = false;
+
+    private MainFrame mainFrame = null;
 
     public ClassSchedule() {
         userConfig = new UserConfig();
-        LoginFrame loginFrame = new LoginFrame("登陆", userConfig);
+        loginFrame = new LoginFrame("登陆");
         loginFrame.rememberUsernameCheckBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -42,11 +46,13 @@ public class ClassSchedule {
                 userConfig.save();
             }
         });
-        if (userConfig.getConfig("login.rememberUsername").equals("true")) {
+        if (userConfig.getConfig("login.rememberUsername") != null
+                && userConfig.getConfig("login.rememberUsername").equals("true")) {
             loginFrame.usernameTextField.setText(userConfig.getConfig("user.username"));
             loginFrame.rememberUsernameCheckBox.setSelected(true);
         }
-        if (userConfig.getConfig("login.rememberUsername").equals("true")) {
+        if (userConfig.getConfig("login.rememberUsername") != null
+                && userConfig.getConfig("login.rememberUsername").equals("true")) {
             loginFrame.passwordTextField.setText(userConfig.getConfig("user.password"));
             loginFrame.rememberPasswordCheckBox.setSelected(true);
         }
@@ -59,9 +65,10 @@ public class ClassSchedule {
                     userConfig.setConfig("user.username", loginFrame.usernameTextField.getText());
                     userConfig.setConfig("user.password", String.valueOf(loginFrame.passwordTextField.getPassword()));
                     userConfig.save();
+                    logged = true;
                     loginFrame.dispatchEvent(new WindowEvent(loginFrame, WindowEvent.WINDOW_CLOSING));
                 } else {
-                    JOptionPane.showMessageDialog(loginFrame, "学号和密码不匹配", "登陆失败", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(loginFrame, "学号和密码不匹配或连接池中没有可用连接", "登陆失败", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -74,7 +81,6 @@ public class ClassSchedule {
                 }
             }
         });
-
         Thread loginThread = new Thread() {
             @Override
             public void run() {
@@ -89,15 +95,17 @@ public class ClassSchedule {
                 }
             }
         };
-
         loginThread.start();
         try {
             loginThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        System.out.println("时间开始流动");
+        if (!logged) {
+            System.out.println("not logged in, about to exit");
+            System.exit(0);
+        }
+        mainFrame = new MainFrame("Class Schedule");
     }
 
     public static void main(String[] args) {
@@ -107,7 +115,6 @@ public class ClassSchedule {
                 | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        // new ClassSchedule();
-        new MainFrame();
+        new ClassSchedule();
     }
 }
