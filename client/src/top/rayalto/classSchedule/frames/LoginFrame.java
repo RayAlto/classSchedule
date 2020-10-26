@@ -62,4 +62,13 @@ public class LoginFrame extends JFrame {
         setVisible(true);
     }
 
+    public void waitForConnectionPool(boolean waitFor) {
+        if (waitFor) {
+            loginButton.setEnabled(false);
+            loginButton.setText("正在建立连接 ...");
+        } else {
+            loginButton.setEnabled(true);
+            loginButton.setText("登陆");
+        }
+    }
 }
