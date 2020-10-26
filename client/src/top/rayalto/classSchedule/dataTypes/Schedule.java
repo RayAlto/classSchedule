@@ -12,4 +12,19 @@ public class Schedule {
     public int startWeekday;
     public int weekIndex;
     public int roomId;
+
+    public Schedule() {
+    }
+
+    public Schedule(int lessonId, int periods, Date startDate, Time startTime, Time endTime, int startWeekday,
+            int weekIndex, int roomId) {
+        this.lessonId = lessonId;
+        this.periods = periods;
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startWeekday = startWeekday;
+        this.weekIndex = weekIndex;
+        this.roomId = roomId;
+    }
 }

@@ -1,6 +1,9 @@
 package top.rayalto.classSchedule.database;
 
+import top.rayalto.classSchedule.dataTypes.Classmate;
+import top.rayalto.classSchedule.dataTypes.Lesson;
 import top.rayalto.classSchedule.dataTypes.Schedule;
+import top.rayalto.classSchedule.dataTypes.Teacher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,15 +121,9 @@ public class DatabaseEntity {
             statement.setDate(1, Date.valueOf(dateString));
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Schedule schedule = new Schedule();
-                schedule.lessonId = resultSet.getInt(1);
-                schedule.periods = resultSet.getInt(2);
-                schedule.startDate = resultSet.getDate(3);
-                schedule.startTime = resultSet.getTime(4);
-                schedule.endTime = resultSet.getTime(5);
-                schedule.startWeekday = resultSet.getInt(6);
-                schedule.weekIndex = resultSet.getInt(7);
-                schedule.roomId = resultSet.getInt(8);
+                Schedule schedule = new Schedule(resultSet.getInt(1), resultSet.getInt(2), resultSet.getDate(3),
+                        resultSet.getTime(4), resultSet.getTime(5), resultSet.getInt(6), resultSet.getInt(7),
+                        resultSet.getInt(8));
                 schedules.add(schedule);
             }
             System.out.format("got %d results", schedules.size());
@@ -135,5 +132,88 @@ public class DatabaseEntity {
             e.printStackTrace();
         }
         return schedules;
+    }
+
+    public static Lesson getLesson(int lessonId) {
+        System.out.print("getting connection ... ");
+        Lesson lesson = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM lesson WHERE id = ?");
+            statement.setInt(1, lessonId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                lesson = new Lesson(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7),
+                        resultSet.getInt(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(11),
+                        resultSet.getInt(12));
+            }
+            if (lesson == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :", lesson.nameZh);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return lesson;
+    }
+
+    public static Classmate getClassmate(String code) {
+        System.out.print("getting connection ... ");
+        Classmate classmate = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM classmate WHERE code = ?");
+            statement.setString(1, code);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                classmate = new Classmate(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getInt(7),
+                        resultSet.getString(8));
+            }
+            if (classmate == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :", classmate.classmateName);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return classmate;
+    }
+
+    public static Teacher getTeacher(int id) {
+        System.out.print("getting connection ... ");
+        Teacher teacher = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM teacher WHERE id = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                teacher = new Teacher(
+                    resultSet.getInt(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getInt(5),
+                    resultSet.getInt(6),
+                    resultSet.getString(7),
+                    resultSet.getString(8)
+                );
+            }
+            if (teacher == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :", teacher.teacherName);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return teacher;
     }
 }
