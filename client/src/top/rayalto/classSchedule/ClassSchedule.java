@@ -26,6 +26,12 @@ public class ClassSchedule {
     private MainFrame mainFrame = null;
 
     public ClassSchedule() {
+        new Thread() {
+            @Override
+            public void run() {
+                DatabaseEntity.initializeConnectionPool();
+            }
+        }.start();
         userConfig = new UserConfig();
         loginFrame = new LoginFrame("登陆");
         loginFrame.rememberUsernameCheckBox.addItemListener(new ItemListener() {
@@ -33,8 +39,10 @@ public class ClassSchedule {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     userConfig.setConfig("login.rememberUsername", "true");
+                    System.out.println("set remember user name: true");
                 } else {
                     userConfig.setConfig("login.rememberUsername", "false");
+                    System.out.println("set remember user name: false");
                 }
                 userConfig.save();
             }
@@ -44,8 +52,10 @@ public class ClassSchedule {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     userConfig.setConfig("login.rememberPassword", "true");
+                    System.out.println("set remember password: true");
                 } else {
                     userConfig.setConfig("login.rememberPassword", "false");
+                    System.out.println("set remember password: false");
                 }
                 userConfig.save();
             }

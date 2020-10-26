@@ -20,7 +20,6 @@ public class DatabaseEntity {
     private static MariaDbPoolDataSource poolDataSource = new MariaDbPoolDataSource();
 
     static {
-        System.out.print("connecting to database ... ");
         try {
             poolDataSource.setServerName("www.rayalto.top");
             poolDataSource.setPortNumber(8306);
@@ -28,14 +27,23 @@ public class DatabaseEntity {
             poolDataSource.setUser("rayalto");
             poolDataSource.setPassword("WoCaoNiMa123+++mysql");
         } catch (SQLException e) {
-            System.err.println("failed, about to exit.");
+            e.printStackTrace();
+        }
+    }
+
+    synchronized public static void initializeConnectionPool() {
+        System.out.println("initialize connection pool ... ");
+        try {
+            poolDataSource.initialize();
+        } catch (SQLException e) {
+            System.err.println("failed, about to exit");
             e.printStackTrace();
             System.exit(-1);
         }
-        System.out.println("done");
+        System.out.println("connection pool initialized");
     }
 
-    public static boolean login(String username, String password) {
+    synchronized public static boolean login(String username, String password) {
         System.out.format("try to login with username: %s, password: %s%n", username, password);
         String passwordHash = null;
         System.out.print("getting connection ... ");
@@ -69,7 +77,7 @@ public class DatabaseEntity {
         return true;
     }
 
-    public static List<Schedule> getSchedule(String startDateString, String endDateString) {
+    synchronized public static List<Schedule> getSchedule(String startDateString, String endDateString) {
         List<Schedule> schedules = new ArrayList<Schedule>();
         System.out.print("getting connection ... ");
         try (Connection connection = poolDataSource.getConnection()) {
@@ -100,7 +108,7 @@ public class DatabaseEntity {
         return schedules;
     }
 
-    public static List<Schedule> getSchedule(String dateString) {
+    synchronized public static List<Schedule> getSchedule(String dateString) {
         List<Schedule> schedules = new ArrayList<Schedule>();
         System.out.print("getting connection ... ");
         try (Connection connection = poolDataSource.getConnection()) {
