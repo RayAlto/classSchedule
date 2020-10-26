@@ -32,6 +32,7 @@ public class UserConfig {
             if (Files.notExists(configFileParentDirPath)) {
                 try {
                     Files.createDirectory(configFileParentDirPath);
+                    Files.createFile(Path.of(configFileDir));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
