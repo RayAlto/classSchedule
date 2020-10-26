@@ -20,7 +20,6 @@ public class DatabaseEntity {
     private static MariaDbPoolDataSource poolDataSource = new MariaDbPoolDataSource();
 
     static {
-        System.out.print("connecting to database ... ");
         try {
             poolDataSource.setServerName("www.rayalto.top");
             poolDataSource.setPortNumber(8306);
@@ -28,11 +27,20 @@ public class DatabaseEntity {
             poolDataSource.setUser("rayalto");
             poolDataSource.setPassword("WoCaoNiMa123+++mysql");
         } catch (SQLException e) {
-            System.err.println("failed, about to exit.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void initializeConnectionPool() {
+        System.out.println("initialize connection pool ... ");
+        try {
+            poolDataSource.initialize();
+        } catch (SQLException e) {
+            System.err.println("failed, about to exit");
             e.printStackTrace();
             System.exit(-1);
         }
-        System.out.println("done");
+        System.out.println("connection pool initialized");
     }
 
     public static boolean login(String username, String password) {
