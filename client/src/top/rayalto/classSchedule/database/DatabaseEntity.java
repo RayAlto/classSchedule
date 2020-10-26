@@ -1,12 +1,5 @@
 package top.rayalto.classSchedule.database;
 
-import top.rayalto.classSchedule.dataTypes.Classmate;
-import top.rayalto.classSchedule.dataTypes.Lesson;
-import top.rayalto.classSchedule.dataTypes.Schedule;
-import top.rayalto.classSchedule.dataTypes.Teacher;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,8 +8,21 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mariadb.jdbc.MariaDbPoolDataSource;
+
+import top.rayalto.classSchedule.dataTypes.Classmate;
+import top.rayalto.classSchedule.dataTypes.Department;
+import top.rayalto.classSchedule.dataTypes.ExamMode;
+import top.rayalto.classSchedule.dataTypes.Lesson;
+import top.rayalto.classSchedule.dataTypes.LessonType;
+import top.rayalto.classSchedule.dataTypes.Room;
+import top.rayalto.classSchedule.dataTypes.Schedule;
+import top.rayalto.classSchedule.dataTypes.SchoolClass;
+import top.rayalto.classSchedule.dataTypes.Teacher;
+import top.rayalto.classSchedule.dataTypes.User;
 
 public class DatabaseEntity {
 
@@ -152,7 +158,7 @@ public class DatabaseEntity {
             if (lesson == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :", lesson.nameZh);
+                System.out.format("got 1 result :%s", lesson.nameZh);
         } catch (SQLException e) {
             System.out.println("SQL Error");
             e.printStackTrace();
@@ -177,7 +183,7 @@ public class DatabaseEntity {
             if (classmate == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :", classmate.classmateName);
+                System.out.format("got 1 result :%s", classmate.classmateName);
         } catch (SQLException e) {
             System.out.println("SQL Error");
             e.printStackTrace();
@@ -195,25 +201,222 @@ public class DatabaseEntity {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                teacher = new Teacher(
-                    resultSet.getInt(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3),
-                    resultSet.getString(4),
-                    resultSet.getInt(5),
-                    resultSet.getInt(6),
-                    resultSet.getString(7),
-                    resultSet.getString(8)
-                );
+                teacher = new Teacher(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getInt(5), resultSet.getInt(6), resultSet.getString(7),
+                        resultSet.getString(8));
             }
             if (teacher == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :", teacher.teacherName);
+                System.out.format("got 1 result :%s", teacher.teacherName);
         } catch (SQLException e) {
             System.out.println("SQL Error");
             e.printStackTrace();
         }
         return teacher;
+    }
+
+    public static User getUser(String code) {
+        System.out.print("getting connection ... ");
+        User user = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE code = ?");
+            statement.setString(1, code);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                user = new User(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7),
+                        resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
+            }
+            if (user == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :%s", user.realName);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public static Department getDepartment(int id) {
+        System.out.print("getting connection ... ");
+        Department department = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM department WHERE code = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                department = new Department(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
+            }
+            if (department == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :%s", department.departmentName);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return department;
+    }
+
+    public static SchoolClass getClass(int id) {
+        System.out.print("getting connection ... ");
+        SchoolClass schoolClass = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM department WHERE code = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                schoolClass = new SchoolClass(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getInt(5));
+            }
+            if (schoolClass == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :%s", schoolClass.className);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return schoolClass;
+    }
+
+    public static Room getRoom(int id) {
+        System.out.print("getting connection ... ");
+        Room room = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM room WHERE id = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                room = new Room(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
+            }
+            if (room == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :%s", room.roomName);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return room;
+    }
+
+    public static LessonType getLessonType(int id) {
+        System.out.print("getting connection ... ");
+        LessonType lessonType = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM lessonType WHERE id = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                lessonType = new LessonType(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
+            }
+            if (lessonType == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :%s", lessonType.lessonTypeName);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return lessonType;
+    }
+
+    public static ExamMode getExamMode(int id) {
+        System.out.print("getting connection ... ");
+        ExamMode examMode = null;
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM examMode WHERE id = ?");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                examMode = new ExamMode(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
+            }
+            if (examMode == null)
+                System.out.println("no result");
+            else
+                System.out.format("got 1 result :%s", examMode.examModeName);
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return examMode;
+    }
+
+    public static List<Integer> getClassesFromLesson(int lessonId) {
+        System.out.print("getting connection ... ");
+        List<Integer> schoolClasses = new ArrayList<Integer>();
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT classId FROM lessonClasses WHERE lessonId = ?");
+            statement.setInt(1, lessonId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                schoolClasses.add(resultSet.getInt(1));
+            }
+            System.out.format("got %d results", schoolClasses.size());
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return schoolClasses;
+    }
+
+    public static List<Integer> getTeachersFromLesson(int lessonId) {
+        System.out.print("getting connection ... ");
+        List<Integer> teachers = new ArrayList<Integer>();
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT teacherId FROM lessonTeachers WHERE lessonId = ?");
+            statement.setInt(1, lessonId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                teachers.add(resultSet.getInt(1));
+            }
+            System.out.format("got %d results", teachers.size());
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return teachers;
+    }
+
+    public static List<String> getClassmatesFromLesson(int lessonId) {
+        System.out.print("getting connection ... ");
+        List<String> classmates = new ArrayList<String>();
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT classmateCode FROM lessonClassmates WHERE lessonId = ?");
+            statement.setInt(1, lessonId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                classmates.add(resultSet.getString(1));
+            }
+            System.out.format("got %d results", classmates.size());
+        } catch (SQLException e) {
+            System.out.println("SQL Error");
+            e.printStackTrace();
+        }
+        return classmates;
     }
 }
