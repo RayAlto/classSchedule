@@ -1,11 +1,11 @@
 package top.rayalto.classSchedule.components;
 
-import top.rayalto.classSchedule.Sources;
-
 import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JButton;
+
+import top.rayalto.classSchedule.Sources;
 
 public class SideBarButton extends JButton {
 

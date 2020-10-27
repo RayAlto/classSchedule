@@ -1,7 +1,5 @@
 package top.rayalto.classSchedule.frames;
 
-import top.rayalto.classSchedule.components.SideBar;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -12,6 +10,8 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+
+import top.rayalto.classSchedule.components.SideBar;
 
 public class MainFrame extends JFrame {
     private static final long serialVersionUID = 1L;

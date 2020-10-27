@@ -1,7 +1,5 @@
 package top.rayalto.classSchedule.components;
 
-import top.rayalto.classSchedule.Sources;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -12,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+
+import top.rayalto.classSchedule.Sources;
 
 public class SideBar extends JPanel {
 

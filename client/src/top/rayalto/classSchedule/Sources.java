@@ -2,7 +2,6 @@ package top.rayalto.classSchedule;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
-
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
