@@ -1,6 +1,7 @@
 package top.rayalto.classSchedule.frames;
 
 import top.rayalto.classSchedule.Sources;
+import top.rayalto.classSchedule.database.DatabaseEntity;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -11,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 
 public class LoginFrame extends JFrame {
@@ -60,15 +62,20 @@ public class LoginFrame extends JFrame {
         setLocation((screenSize.width - loginFrameSize.width) / 2, (screenSize.height - loginFrameSize.height) / 2);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setVisible(true);
-    }
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                loginButton.setEnabled(false);
+                loginButton.setText("正在建立连接 ...");
+                DatabaseEntity.initializeConnectionPool();
+                return null;
+            }
 
-    public void waitForConnectionPool(boolean waitFor) {
-        if (waitFor) {
-            loginButton.setEnabled(false);
-            loginButton.setText("正在建立连接 ...");
-        } else {
-            loginButton.setEnabled(true);
-            loginButton.setText("登陆");
-        }
+            @Override
+            protected void done() {
+                loginButton.setEnabled(true);
+                loginButton.setText("登陆");
+            }
+        }.execute();
     }
 }

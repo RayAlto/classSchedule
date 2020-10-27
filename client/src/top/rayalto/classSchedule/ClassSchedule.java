@@ -8,7 +8,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -29,19 +28,6 @@ public class ClassSchedule {
     public ClassSchedule() {
         userConfig = new UserConfig();
         loginFrame = new LoginFrame("登陆");
-        new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                loginFrame.waitForConnectionPool(true);
-                DatabaseEntity.initializeConnectionPool();
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                loginFrame.waitForConnectionPool(false);
-            }
-        }.execute();
         loginFrame.rememberUsernameCheckBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
