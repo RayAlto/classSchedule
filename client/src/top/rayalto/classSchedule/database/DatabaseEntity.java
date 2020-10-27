@@ -1,5 +1,6 @@
 package top.rayalto.classSchedule.database;
 
+import java.sql.Statement;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.mariadb.jdbc.MariaDbPoolDataSource;
 
@@ -111,7 +113,7 @@ public class DatabaseEntity {
             }
             System.out.format("got %d results", schedules.size());
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return schedules;
@@ -134,7 +136,7 @@ public class DatabaseEntity {
             }
             System.out.format("got %d results", schedules.size());
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return schedules;
@@ -160,10 +162,34 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", lesson.nameZh);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return lesson;
+    }
+
+    public static List<Lesson> getLessons(List<Integer> lessonIds) {
+        List<Lesson> lessons = new ArrayList<Lesson>();
+        System.out.println("getting connection ... ");
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            List<String> idStrings = new ArrayList<>();
+            idStrings.addAll(lessonIds.stream().map(String::valueOf).collect(Collectors.toList()));
+            String queryString = "SELECT * FROM lesson WHERE id IN (" + String.join(", ", idStrings) + ')';
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(queryString);
+            while (resultSet.next()) {
+                lessons.add(new Lesson(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7),
+                        resultSet.getInt(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(11),
+                        resultSet.getInt(12)));
+            }
+            System.out.format("got %d results", lessons.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return lessons;
     }
 
     public static Classmate getClassmate(String code) {
@@ -185,7 +211,7 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", classmate.classmateName);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return classmate;
@@ -210,7 +236,7 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", teacher.teacherName);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return teacher;
@@ -235,7 +261,7 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", user.realName);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return user;
@@ -258,7 +284,7 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", department.departmentName);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return department;
@@ -282,7 +308,7 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", schoolClass.className);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return schoolClass;
@@ -305,7 +331,7 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", room.roomName);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return room;
@@ -328,7 +354,7 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", lessonType.lessonTypeName);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return lessonType;
@@ -351,7 +377,7 @@ public class DatabaseEntity {
             else
                 System.out.format("got 1 result :%s", examMode.examModeName);
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return examMode;
@@ -372,7 +398,7 @@ public class DatabaseEntity {
             }
             System.out.format("got %d results", schoolClasses.size());
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return schoolClasses;
@@ -393,7 +419,7 @@ public class DatabaseEntity {
             }
             System.out.format("got %d results", teachers.size());
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return teachers;
@@ -414,7 +440,7 @@ public class DatabaseEntity {
             }
             System.out.format("got %d results", classmates.size());
         } catch (SQLException e) {
-            System.out.println("SQL Error");
+            System.err.println("SQL Error");
             e.printStackTrace();
         }
         return classmates;
