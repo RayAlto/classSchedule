@@ -13,14 +13,17 @@ import java.util.Properties;
 import java.util.Set;
 
 public class UserConfig {
-    private String configFileParentDir = System.getProperty("user.home") + File.separator + ".classSchedule";
-    private String configFileDir = configFileParentDir + File.separator + "config.conf";
-    private Path configFileParentDirPath = Paths.get(configFileParentDir);
-    private Path configFileDirPath = Paths.get(configFileDir);
-    private Properties properties = new Properties();
-    private boolean _loaded = false;
+    private static String configFileParentDir = System.getProperty("user.home") + File.separator + ".classSchedule";
+    private static String configFileDir = configFileParentDir + File.separator + "config.conf";
+    private static Path configFileParentDirPath = Paths.get(configFileParentDir);
+    private static Path configFileDirPath = Paths.get(configFileDir);
+    private static Properties properties = new Properties();
+    private static boolean _loaded = false;
 
-    public UserConfig() {
+    public static boolean logged = false;
+    public static Object loginLock = new Object();
+
+    static {
         if (Files.exists(configFileDirPath)) {
             try (FileInputStream configFileInputStream = new FileInputStream(configFileDir)) {
                 properties.load(configFileInputStream);
@@ -50,11 +53,15 @@ public class UserConfig {
         }
     }
 
-    public boolean loaded() {
+    public static void initializeUserConfig() {
+        save();
+    }
+
+    public static boolean loaded() {
         return _loaded;
     }
 
-    public void save() {
+    public static void save() {
         try (FileOutputStream configFileOutputStream = new FileOutputStream(configFileDir)) {
             properties.store(configFileOutputStream, null);
         } catch (IOException e) {
@@ -62,11 +69,11 @@ public class UserConfig {
         }
     }
 
-    public String getConfig(String configName) {
+    public static String getConfig(String configName) {
         return properties.getProperty(configName);
     }
 
-    public void setConfig(String configName, String value) {
+    public static void setConfig(String configName, String value) {
         properties.setProperty(configName, value);
     }
 }
