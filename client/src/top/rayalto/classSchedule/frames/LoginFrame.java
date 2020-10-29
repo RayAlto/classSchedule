@@ -29,14 +29,14 @@ public class LoginFrame extends JFrame {
     private Dimension loginFrameSize = new Dimension(500, 270);
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    public JLabel loginBannerLabel = new JLabel(Sources.LOGIN_BANNER_IMAGE);
-    public JLabel usernameLabel = new JLabel("学号：");
-    public JLabel passwordLabel = new JLabel("密码：");
-    public JTextField usernameTextField = new JTextField();
-    public JPasswordField passwordTextField = new JPasswordField();
-    public JCheckBox rememberUsernameCheckBox = new JCheckBox("记住学号");
-    public JCheckBox rememberPasswordCheckBox = new JCheckBox("记住密码");
-    public JButton loginButton = new JButton("登陆");
+    private JLabel loginBannerLabel = new JLabel(Sources.LOGIN_BANNER_IMAGE);
+    private JLabel usernameLabel = new JLabel("学号：");
+    private JLabel passwordLabel = new JLabel("密码：");
+    private JTextField usernameTextField = new JTextField();
+    private JPasswordField passwordTextField = new JPasswordField();
+    private JCheckBox rememberUsernameCheckBox = new JCheckBox("记住学号");
+    private JCheckBox rememberPasswordCheckBox = new JCheckBox("记住密码");
+    private JButton loginButton = new JButton("登陆");
 
     public LoginFrame(String title) {
         super(title);
