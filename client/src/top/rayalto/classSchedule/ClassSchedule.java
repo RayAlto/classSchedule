@@ -56,6 +56,6 @@ public class ClassSchedule {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignore) {
         }
-        new ClassSchedule();
+        new MainFrame("classSchedule");
     }
 }
