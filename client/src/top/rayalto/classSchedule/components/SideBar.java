@@ -50,6 +50,7 @@ public class SideBar extends JPanel {
         lessonTypeButton.setIcon(Sources.SIDEBAR_LESSON_TYPE_ICON_IMAGE);
         examModeButton.setIcon(Sources.SIDEBAR_EXAM_MODE_ICON_IMAGE);
         userButton.setIcon(Sources.SIDEBAR_USER_ICON_IMAGE);
+        sideBarBanner.setToolTipText("鼠标左键单击可以收起/展开侧边栏");
         homeButton.setToolTipText("主页");
         scheduleButton.setToolTipText("课程表，可以查看课程的安排");
         lessonButton.setToolTipText("课程列表，可以查看你所选的所有课程的信息");

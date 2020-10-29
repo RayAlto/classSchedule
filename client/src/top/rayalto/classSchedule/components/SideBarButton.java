@@ -16,10 +16,6 @@ public class SideBarButton extends JButton {
 
     public SideBarButton() {
         this(null);
-        setBackground(Color.DARK_GRAY);
-        setForeground(Color.WHITE);
-        setIconTextGap(45);
-        setFont(Sources.NOTO_SANS_MONO_FONT);
     }
 
     public SideBarButton(String text) {
