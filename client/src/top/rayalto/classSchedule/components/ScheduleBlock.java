@@ -6,17 +6,19 @@ import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Calendar;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 
 import top.rayalto.classSchedule.Sources;
+import top.rayalto.classSchedule.dataTypes.ScheduleDetail;
 
 class DarkTextArea extends JTextArea {
     private static final long serialVersionUID = 1L;
@@ -38,9 +40,10 @@ class DarkTextArea extends JTextArea {
     public FontMetrics getFontMetrics(Font font) {
         return new FontMetrics(font) {
             private static final long serialVersionUID = 1L;
+
             @Override
             public int getHeight() {
-                return font.getSize();
+                return font.getSize() + 2;
             }
         };
     }
@@ -59,17 +62,20 @@ public class ScheduleBlock extends JButton {
             }
         }
     };
+
+    private ScheduleDetail scheduleDetail;
     private DarkTextArea lessonNameTextArea = new DarkTextArea();
     private DarkTextArea roomNameTextArea = new DarkTextArea();
     private DarkTextArea timeInfoTextArea = new DarkTextArea();
 
-    public ScheduleBlock(String lessonName, String roomName, String timeInfo) {
+    public ScheduleBlock(ScheduleDetail scheduleDetail) {
+        this.scheduleDetail = scheduleDetail;
         setBorder(null);
         setContentAreaFilled(false);
-        lessonNameTextArea.setText(lessonName);
-        roomNameTextArea.setText(roomName);
-        timeInfoTextArea.setText(timeInfo);
-        setLayout(new GridLayout(3, 0, 0, 0));
+        lessonNameTextArea.setText(scheduleDetail.lessonInfo.nameZh);
+        roomNameTextArea.setText(scheduleDetail.roomInfo.roomName);
+        timeInfoTextArea.setText(scheduleDetail.scheduleInfo.startTime.toString());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(lessonNameTextArea);
         add(roomNameTextArea);
         add(timeInfoTextArea);
@@ -87,5 +93,22 @@ public class ScheduleBlock extends JButton {
         g2d.setPaint(background);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
         super.paintComponent(g);
+    }
+
+    public float getStartTimeValue() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(scheduleDetail.scheduleInfo.startTime);
+        return ((calendar.get(Calendar.HOUR) - 8) * 60 + calendar.get(Calendar.MINUTE)) / 840.0f;
+    }
+
+    public float getDurationValue() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(
+                scheduleDetail.scheduleInfo.endTime.getTime() - scheduleDetail.scheduleInfo.startTime.getTime());
+        return ((calendar.get(Calendar.HOUR) - 8) * 60 + calendar.get(Calendar.MINUTE)) / 840.0f;
+    }
+
+    public int getWeekDayValue() {
+        return scheduleDetail.scheduleInfo.startWeekday - 1;
     }
 }

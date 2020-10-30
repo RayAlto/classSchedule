@@ -7,15 +7,17 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JPanel;
 
 import top.rayalto.classSchedule.Sources;
+import top.rayalto.classSchedule.dataTypes.ScheduleDetail;
+import top.rayalto.classSchedule.database.DatabaseEntity;
 
 public class SchedulePanel extends JPanel {
 
@@ -24,10 +26,7 @@ public class SchedulePanel extends JPanel {
     private final int DAY_BEGIN = 8;
     private final int DAY_END = 22;
 
-    public ScheduleBlock scheduleBlock = new ScheduleBlock(
-            "I vote Donald J. Trumpt for 100 times!!!!!!!!!!!!!!!!!!!!!",
-            "I vote Donald J. Trumpt for 100 times!!!!!!!!!!!!!!!!!!!!!",
-            "I vote Donald J. Trumpt for 100 times!!!!!!!!!!!!!!!!!!!!!");
+    private List<ScheduleBlock> scheduleBlocks = new ArrayList<ScheduleBlock>();
 
     private static final Map<Integer, String> index2WeekString = new HashMap<Integer, String>() {
         private static final long serialVersionUID = 1L;
@@ -45,14 +44,12 @@ public class SchedulePanel extends JPanel {
     public SchedulePanel() {
         setLayout(null);
         setMinimumSize(MINIMUN_SIZE);
-        add(scheduleBlock);
-        scheduleBlock.setBounds(250, 0, 100, 200);
-        scheduleBlock.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("clicked");
-            }
-        });
+        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail("2020-10-26")) {
+            scheduleBlocks.add(new ScheduleBlock(scheduleDetail));
+        }
+        for (ScheduleBlock block : scheduleBlocks) {
+            add(block);
+        }
     }
 
     @Override
@@ -64,7 +61,7 @@ public class SchedulePanel extends JPanel {
         float blockSizeWidth = (float) availableSize.width / 7.0f;
         float blockSizeHeight = (float) availableSize.height / 14.0f;
         float fontLocationY = 35;
-        float fontLocationX = 50.0f + ((float) blockSizeWidth - 45.0f) / 2.0f;
+        float fontLocationX = 50.0f + (blockSizeWidth - 45.0f) / 2.0f;
         GradientPaint backgroundGradientPaint = new GradientPaint(0f, 0f, new Color(35, 37, 38), panelSize.width, 0,
                 new Color(65, 67, 69));
         Graphics2D g2dBackground = (Graphics2D) g.create();
@@ -94,6 +91,11 @@ public class SchedulePanel extends JPanel {
             g2d.draw(line);
             g2d.drawString(index2WeekString.get(columnIndex), columnIndex * blockSizeWidth + fontLocationX, 25);
 
+        }
+        for (ScheduleBlock block : scheduleBlocks) {
+            block.setBounds((int) (startLocation.x + 45 + block.getWeekDayValue() * blockSizeWidth),
+                    (int) (startLocation.y + availableSize.height * block.getStartTimeValue()), (int) blockSizeWidth,
+                    (int) (availableSize.height * block.getDurationValue()));
         }
         paintComponents(g);
     }

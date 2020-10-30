@@ -22,6 +22,7 @@ import top.rayalto.classSchedule.dataTypes.Lesson;
 import top.rayalto.classSchedule.dataTypes.LessonType;
 import top.rayalto.classSchedule.dataTypes.Room;
 import top.rayalto.classSchedule.dataTypes.Schedule;
+import top.rayalto.classSchedule.dataTypes.ScheduleDetail;
 import top.rayalto.classSchedule.dataTypes.SchoolClass;
 import top.rayalto.classSchedule.dataTypes.Teacher;
 import top.rayalto.classSchedule.dataTypes.User;
@@ -40,6 +41,24 @@ public class DatabaseEntity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String generateDateString(int year, int month, int day) {
+        while (year >= 10000)
+            year /= 10;
+        while (month >= 100)
+            month /= 10;
+        while (day >= 100)
+            day /= 10;
+        return String.format("%04d:%02d:%02d", year, month, day);
+    }
+
+    public static String generateTimeString(int hour, int minute) {
+        while (hour >= 100)
+            hour /= 10;
+        while (minute >= 100)
+            minute /= 10;
+        return String.format("%02d:%02d:00", hour, minute);
     }
 
     public static void initializeConnectionPool() {
@@ -111,7 +130,7 @@ public class DatabaseEntity {
                 schedule.roomId = resultSet.getInt(8);
                 schedules.add(schedule);
             }
-            System.out.format("got %d results", schedules.size());
+            System.out.format("got %d results%n", schedules.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -134,12 +153,48 @@ public class DatabaseEntity {
                         resultSet.getInt(8));
                 schedules.add(schedule);
             }
-            System.out.format("got %d results", schedules.size());
+            System.out.format("got %d results%n", schedules.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
         }
         return schedules;
+    }
+
+    public static List<ScheduleDetail> getScheduleDetail(String startDateString, String endDateString) {
+        List<ScheduleDetail> scheduleDetails = new ArrayList<ScheduleDetail>();
+        List<Schedule> schedules = getSchedule(startDateString, endDateString);
+        for (Schedule schedule : schedules) {
+            Room roomInfo = getRoom(schedule.roomId);
+            Lesson lessonInfo = getLesson(schedule.lessonId);
+            LessonType lessonTypeInfo = getLessonType(lessonInfo.typeId);
+            Department departmentInfo = getDepartment(lessonInfo.departmentId);
+            ExamMode examModeInfo = getExamMode(lessonInfo.examModeId);
+            List<SchoolClass> classes = getClasses(getClassIdsFromLesson(lessonInfo.id));
+            List<Teacher> teachers = getTeachers(getTeachersFromLesson(lessonInfo.id));
+            List<Classmate> classmates = getClassmates(getClassmatesFromLesson(lessonInfo.id));
+            scheduleDetails.add(new ScheduleDetail(schedule, roomInfo, lessonInfo, lessonTypeInfo, departmentInfo,
+                    examModeInfo, classes, teachers, classmates));
+        }
+        return scheduleDetails;
+    }
+
+    public static List<ScheduleDetail> getScheduleDetail(String dateString) {
+        List<ScheduleDetail> scheduleDetails = new ArrayList<ScheduleDetail>();
+        List<Schedule> schedules = getSchedule(dateString);
+        for (Schedule schedule : schedules) {
+            Room roomInfo = getRoom(schedule.roomId);
+            Lesson lessonInfo = getLesson(schedule.lessonId);
+            LessonType lessonTypeInfo = getLessonType(lessonInfo.typeId);
+            Department departmentInfo = getDepartment(lessonInfo.departmentId);
+            ExamMode examModeInfo = getExamMode(lessonInfo.examModeId);
+            List<SchoolClass> classes = getClasses(getClassIdsFromLesson(lessonInfo.id));
+            List<Teacher> teachers = getTeachers(getTeachersFromLesson(lessonInfo.id));
+            List<Classmate> classmates = getClassmates(getClassmatesFromLesson(lessonInfo.id));
+            scheduleDetails.add(new ScheduleDetail(schedule, roomInfo, lessonInfo, lessonTypeInfo, departmentInfo,
+                    examModeInfo, classes, teachers, classmates));
+        }
+        return scheduleDetails;
     }
 
     public static Lesson getLesson(int lessonId) {
@@ -160,7 +215,7 @@ public class DatabaseEntity {
             if (lesson == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", lesson.nameZh);
+                System.out.format("got 1 result :%s%n", lesson.nameZh);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -170,7 +225,7 @@ public class DatabaseEntity {
 
     public static List<Lesson> getLessons(List<Integer> lessonIds) {
         List<Lesson> lessons = new ArrayList<Lesson>();
-        System.out.println("getting connection ... ");
+        System.out.print("getting connection ... ");
         try (Connection connection = poolDataSource.getConnection()) {
             System.out.println("done");
             List<String> idStrings = new ArrayList<String>();
@@ -184,7 +239,7 @@ public class DatabaseEntity {
                         resultSet.getInt(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(11),
                         resultSet.getInt(12)));
             }
-            System.out.format("got %d results", lessons.size());
+            System.out.format("got %d results%n", lessons.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -209,7 +264,7 @@ public class DatabaseEntity {
             if (classmate == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", classmate.classmateName);
+                System.out.format("got 1 result :%s%n", classmate.classmateName);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -219,7 +274,7 @@ public class DatabaseEntity {
 
     public static List<Classmate> getClassmates(List<String> classmateCodes) {
         List<Classmate> classmate = new ArrayList<Classmate>();
-        System.out.println("getting connection ... ");
+        System.out.print("getting connection ... ");
         try (Connection connection = poolDataSource.getConnection()) {
             System.out.println("done");
             String queryString = "SELECT * FROM classmate WHERE code IN ('" + String.join("', '", classmateCodes)
@@ -231,7 +286,7 @@ public class DatabaseEntity {
                         resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getInt(7),
                         resultSet.getString(8)));
             }
-            System.out.format("got %d results", classmate.size());
+            System.out.format("got %d results%n", classmate.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -256,7 +311,7 @@ public class DatabaseEntity {
             if (teacher == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", teacher.teacherName);
+                System.out.format("got 1 result :%s%n", teacher.teacherName);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -266,7 +321,7 @@ public class DatabaseEntity {
 
     public static List<Teacher> getTeachers(List<Integer> ids) {
         List<Teacher> teachers = new ArrayList<Teacher>();
-        System.out.println("getting connection ... ");
+        System.out.print("getting connection ... ");
         try (Connection connection = poolDataSource.getConnection()) {
             System.out.println("done");
             List<String> idStrings = new ArrayList<String>();
@@ -279,7 +334,7 @@ public class DatabaseEntity {
                         resultSet.getString(4), resultSet.getInt(5), resultSet.getInt(6), resultSet.getString(7),
                         resultSet.getString(8)));
             }
-            System.out.format("got %d results", teachers.size());
+            System.out.format("got %d results%n", teachers.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -304,7 +359,7 @@ public class DatabaseEntity {
             if (user == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", user.realName);
+                System.out.format("got 1 result :%s%n", user.realName);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -327,7 +382,7 @@ public class DatabaseEntity {
             if (department == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", department.departmentName);
+                System.out.format("got 1 result :%s%n", department.departmentName);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -337,7 +392,7 @@ public class DatabaseEntity {
 
     public static List<Department> getDepartments(List<Integer> ids) {
         List<Department> departments = new ArrayList<Department>();
-        System.out.println("getting connection ... ");
+        System.out.print("getting connection ... ");
         try (Connection connection = poolDataSource.getConnection()) {
             System.out.println("done");
             List<String> idStrings = new ArrayList<String>();
@@ -348,7 +403,7 @@ public class DatabaseEntity {
             while (resultSet.next()) {
                 departments.add(new Department(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
             }
-            System.out.format("got %d results", departments.size());
+            System.out.format("got %d results%n", departments.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -372,7 +427,7 @@ public class DatabaseEntity {
             if (schoolClass == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", schoolClass.className);
+                System.out.format("got 1 result :%s%n", schoolClass.className);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -395,7 +450,7 @@ public class DatabaseEntity {
                 schoolClasses.add(new SchoolClass(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(5)));
             }
-            System.out.format("got %d result", schoolClasses.size());
+            System.out.format("got %d result%n", schoolClasses.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -418,7 +473,7 @@ public class DatabaseEntity {
             if (room == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", room.roomName);
+                System.out.format("got 1 result :%s%n", room.roomName);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -440,7 +495,7 @@ public class DatabaseEntity {
             while (resultSet.next()) {
                 rooms.add(new Room(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
             }
-            System.out.format("got %d result", rooms.size());
+            System.out.format("got %d result%n", rooms.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -463,7 +518,7 @@ public class DatabaseEntity {
             if (lessonType == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", lessonType.lessonTypeName);
+                System.out.format("got 1 result :%s%n", lessonType.lessonTypeName);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -485,7 +540,7 @@ public class DatabaseEntity {
             while (resultSet.next()) {
                 lessonTypes.add(new LessonType(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
             }
-            System.out.format("got %d result", lessonTypes.size());
+            System.out.format("got %d result%n", lessonTypes.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -508,7 +563,7 @@ public class DatabaseEntity {
             if (examMode == null)
                 System.out.println("no result");
             else
-                System.out.format("got 1 result :%s", examMode.examModeName);
+                System.out.format("got 1 result :%s%n", examMode.examModeName);
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -530,7 +585,7 @@ public class DatabaseEntity {
             while (resultSet.next()) {
                 examModes.add(new ExamMode(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
             }
-            System.out.format("got %d result", examModes.size());
+            System.out.format("got %d result%n", examModes.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -538,7 +593,7 @@ public class DatabaseEntity {
         return examModes;
     }
 
-    public static List<Integer> getClassesFromLesson(int lessonId) {
+    public static List<Integer> getClassIdsFromLesson(int lessonId) {
         System.out.print("getting connection ... ");
         List<Integer> schoolClasses = new ArrayList<Integer>();
         try (Connection connection = poolDataSource.getConnection()) {
@@ -551,7 +606,7 @@ public class DatabaseEntity {
             while (resultSet.next()) {
                 schoolClasses.add(resultSet.getInt(1));
             }
-            System.out.format("got %d results", schoolClasses.size());
+            System.out.format("got %d results%n", schoolClasses.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -572,7 +627,7 @@ public class DatabaseEntity {
             while (resultSet.next()) {
                 teachers.add(resultSet.getInt(1));
             }
-            System.out.format("got %d results", teachers.size());
+            System.out.format("got %d results%n", teachers.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
@@ -593,7 +648,7 @@ public class DatabaseEntity {
             while (resultSet.next()) {
                 classmates.add(resultSet.getString(1));
             }
-            System.out.format("got %d results", classmates.size());
+            System.out.format("got %d results%n", classmates.size());
         } catch (SQLException e) {
             System.err.println("SQL Error");
             e.printStackTrace();
