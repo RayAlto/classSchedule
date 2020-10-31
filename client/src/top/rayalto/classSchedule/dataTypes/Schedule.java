@@ -27,4 +27,8 @@ public class Schedule {
         this.weekIndex = weekIndex;
         this.roomId = roomId;
     }
+
+    public String getTimeInfoString() {
+        return String.join("~", startTime.toString().substring(0, 5), endTime.toString().substring(0, 5));
+    }
 }

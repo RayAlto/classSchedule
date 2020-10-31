@@ -44,7 +44,7 @@ public class SchedulePanel extends JPanel {
     public SchedulePanel() {
         setLayout(null);
         setMinimumSize(MINIMUN_SIZE);
-        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail("2020-10-26")) {
+        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail("2020-10-26", "2020-11-02")) {
             scheduleBlocks.add(new ScheduleBlock(scheduleDetail));
         }
         for (ScheduleBlock block : scheduleBlocks) {

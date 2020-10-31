@@ -74,7 +74,7 @@ public class ScheduleBlock extends JButton {
         setContentAreaFilled(false);
         lessonNameTextArea.setText(scheduleDetail.lessonInfo.nameZh);
         roomNameTextArea.setText(scheduleDetail.roomInfo.roomName);
-        timeInfoTextArea.setText(scheduleDetail.scheduleInfo.startTime.toString());
+        timeInfoTextArea.setText(scheduleDetail.scheduleInfo.getTimeInfoString());
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(lessonNameTextArea);
         add(roomNameTextArea);
