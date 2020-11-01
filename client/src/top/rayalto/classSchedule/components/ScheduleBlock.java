@@ -82,6 +82,12 @@ public class ScheduleBlock extends JButton {
         lessonNameTextArea.addMouseListener(CLICK_AT_BUTTON);
         roomNameTextArea.addMouseListener(CLICK_AT_BUTTON);
         timeInfoTextArea.addMouseListener(CLICK_AT_BUTTON);
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ScheduleDetailFrame(scheduleDetail);
+            }
+        });
     }
 
     @Override

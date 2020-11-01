@@ -104,6 +104,8 @@ public class ScheduleDetailFrame extends JFrame {
 
     public ScheduleDetailFrame(ScheduleDetail scheduleDetail) {
         this.scheduleDetail = scheduleDetail;
+        setTitle(String.join(" ", scheduleDetail.lessonInfo.nameZh, scheduleDetail.scheduleInfo.getTimeInfoString(),
+                "详细信息"));
         setSize(600, 550);
         setLocation((SCREENSIZE.width - getWidth()) / 2, (SCREENSIZE.height - getHeight()) / 2);
         setResizable(false);
@@ -356,7 +358,7 @@ public class ScheduleDetailFrame extends JFrame {
         });
 
         add(tabbedPane);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
 }
