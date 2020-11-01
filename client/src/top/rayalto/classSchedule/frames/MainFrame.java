@@ -2,16 +2,20 @@ package top.rayalto.classSchedule.frames;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
 import top.rayalto.classSchedule.components.CorePanel;
 import top.rayalto.classSchedule.components.SideBar;
+import top.rayalto.classSchedule.database.DatabaseEntity;
 
 public class MainFrame extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -56,6 +60,28 @@ public class MainFrame extends JFrame {
                         foldSideBar(true);
                 }
                 dispatchEvent(new ComponentEvent(MainFrame.this, ComponentEvent.COMPONENT_RESIZED));
+            }
+        });
+        sideBar.homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.SCHEDULE_PANEL);
+            }
+        });
+        sideBar.scheduleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String newDateString;
+                boolean conformed = false;
+                while (!conformed) {
+                    newDateString = (String) JOptionPane.showInputDialog(MainFrame.this,
+                            "输入查询的日期，可以是一周的某一天，\n如果输入的是周末则会自动跳转到下一周\n格式: YYYY-MM-DD", "跳转",
+                            JOptionPane.QUESTION_MESSAGE, null, null, "");
+                    if (newDateString == null || DatabaseEntity.isValidDateString(newDateString))
+                        conformed = true;
+                    else
+                        JOptionPane.showMessageDialog(MainFrame.this, "输入日期无效", "日期解析失败", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         setVisible(true);
