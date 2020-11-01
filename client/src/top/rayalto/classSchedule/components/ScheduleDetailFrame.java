@@ -28,6 +28,8 @@ public class ScheduleDetailFrame extends JFrame {
     private static final long serialVersionUID = 1L;
     private static final Dimension SCREENSIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
+    private ScheduleDetail scheduleDetail;
+
     private JTabbedPane tabbedPane = new JTabbedPane();
 
     private JPanel basicDetailPanel = new JPanel();
