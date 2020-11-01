@@ -9,7 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +36,8 @@ import top.rayalto.classSchedule.dataTypes.User;
 public class DatabaseEntity {
 
     private static MariaDbPoolDataSource poolDataSource = new MariaDbPoolDataSource();
+    private static Calendar calendar = GregorianCalendar.getInstance();
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public static final Map<Integer, String> index2WeekString = new HashMap<Integer, String>() {
         private static final long serialVersionUID = 1L;
@@ -47,6 +53,7 @@ public class DatabaseEntity {
     };
 
     static {
+        dateFormat.setLenient(false);
         try {
             poolDataSource.setServerName("www.rayalto.top");
             poolDataSource.setPortNumber(8306);
@@ -56,6 +63,27 @@ public class DatabaseEntity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void initializeConnectionPool() {
+        System.out.println("initialize connection pool ... ");
+        try {
+            poolDataSource.initialize();
+        } catch (SQLException e) {
+            System.err.println("failed, about to exit");
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        System.out.println("connection pool initialized");
+    }
+
+    public static boolean isValidDateString(String dateString) {
+        try {
+            dateFormat.parse(dateString);
+        } catch (ParseException pe) {
+            return false;
+        }
+        return true;
     }
 
     public static String generateDateString(int year, int month, int day) {
@@ -76,16 +104,16 @@ public class DatabaseEntity {
         return String.format("%02d:%02d:00", hour, minute);
     }
 
-    public static void initializeConnectionPool() {
-        System.out.println("initialize connection pool ... ");
+    public static String[] getWeekStartEndDateStrings(String currentDateString) {
         try {
-            poolDataSource.initialize();
-        } catch (SQLException e) {
-            System.err.println("failed, about to exit");
-            e.printStackTrace();
-            System.exit(-1);
+            calendar.setTime(dateFormat.parse(currentDateString));
+        } catch (ParseException ignore) {
         }
-        System.out.println("connection pool initialized");
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        String startDateString = dateFormat.format(calendar.getTime());
+        calendar.add(Calendar.DATE, 6);
+        String endDateString = dateFormat.format(calendar.getTime());
+        return new String[] { startDateString, endDateString };
     }
 
     public static boolean login(String username, String password) {
