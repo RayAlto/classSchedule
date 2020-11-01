@@ -8,11 +8,19 @@ public class CorePanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
+    public static final String SCHEDULE_PANEL = "schedulePanel";
+
+    private CardLayout card = new CardLayout();
+
     private SchedulePanel schedulePanel = new SchedulePanel();
-    private final String SCHEDULE_PANEL = "schedulePanel";
 
     public CorePanel() {
-        setLayout(new CardLayout());
+        setLayout(card);
         add(schedulePanel, SCHEDULE_PANEL);
+
+    }
+
+    public void showTab(String name) {
+        card.show(this, name);
     }
 }
