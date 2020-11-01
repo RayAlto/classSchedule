@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.mariadb.jdbc.MariaDbPoolDataSource;
@@ -30,6 +32,19 @@ import top.rayalto.classSchedule.dataTypes.User;
 public class DatabaseEntity {
 
     private static MariaDbPoolDataSource poolDataSource = new MariaDbPoolDataSource();
+
+    public static final Map<Integer, String> index2WeekString = new HashMap<Integer, String>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put(0, "星期一");
+            put(1, "星期二");
+            put(2, "星期三");
+            put(3, "星期四");
+            put(4, "星期五");
+            put(5, "星期六");
+            put(6, "星期日");
+        }
+    };
 
     static {
         try {
@@ -373,7 +388,7 @@ public class DatabaseEntity {
         try (Connection connection = poolDataSource.getConnection()) {
             System.out.println("done");
             System.out.print("executing query ... ");
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM department WHERE code = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM department WHERE id = ?");
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

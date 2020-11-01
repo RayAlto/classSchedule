@@ -28,19 +28,6 @@ public class SchedulePanel extends JPanel {
 
     private List<ScheduleBlock> scheduleBlocks = new ArrayList<ScheduleBlock>();
 
-    private static final Map<Integer, String> index2WeekString = new HashMap<Integer, String>() {
-        private static final long serialVersionUID = 1L;
-        {
-            put(0, "星期一");
-            put(1, "星期二");
-            put(2, "星期三");
-            put(3, "星期四");
-            put(4, "星期五");
-            put(5, "星期六");
-            put(6, "星期日");
-        }
-    };
-
     public SchedulePanel() {
         setLayout(null);
         setMinimumSize(MINIMUN_SIZE);
@@ -89,7 +76,7 @@ public class SchedulePanel extends JPanel {
             Line2D.Float line = new Line2D.Float(lineLocationX, startLocation.y, lineLocationX,
                     startLocation.y + availableSize.height);
             g2d.draw(line);
-            g2d.drawString(index2WeekString.get(columnIndex), columnIndex * blockSizeWidth + fontLocationX, 25);
+            g2d.drawString(DatabaseEntity.index2WeekString.get(columnIndex), columnIndex * blockSizeWidth + fontLocationX, 25);
 
         }
         for (ScheduleBlock block : scheduleBlocks) {
