@@ -127,8 +127,8 @@ public class DatabaseEntity {
     }
 
     public static String[] getCurrentWeekStartEndStrings() {
-        return getWeekStartEndDateStrings(
-                java.util.Date.from(java.time.LocalDate.now().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()));
+        return getWeekStartEndDateStrings(java.util.Date
+                .from(java.time.LocalDate.now().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()));
     }
 
     public static boolean login(String username, String password) {
@@ -291,6 +291,27 @@ public class DatabaseEntity {
             String queryString = "SELECT * FROM lesson WHERE id IN (" + String.join(", ", idStrings) + ')';
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(queryString);
+            while (resultSet.next()) {
+                lessons.add(new Lesson(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7),
+                        resultSet.getInt(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(11),
+                        resultSet.getInt(12)));
+            }
+            System.out.format("got %d results%n", lessons.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return lessons;
+    }
+
+    public static List<Lesson> getLessons() {
+        List<Lesson> lessons = new ArrayList<Lesson>();
+        System.out.print("getting connection ... ");
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM lesson");
             while (resultSet.next()) {
                 lessons.add(new Lesson(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
                         resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getString(7),
