@@ -17,10 +17,13 @@ public class CorePanel extends JPanel {
     public CorePanel() {
         setLayout(card);
         add(schedulePanel, SCHEDULE_PANEL);
-
     }
 
     public void showTab(String name) {
         card.show(this, name);
+    }
+
+    public void showSchedulesBetweenDate(String startDate, String endDate) {
+        schedulePanel.useDate(startDate, endDate);
     }
 }

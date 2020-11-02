@@ -27,14 +27,37 @@ public class SchedulePanel extends JPanel {
     private List<ScheduleBlock> scheduleBlocks = new ArrayList<ScheduleBlock>();
 
     public SchedulePanel() {
+        this(DatabaseEntity.getCurrentWeekStartEndStrings());
+    }
+
+    public SchedulePanel(String[] dateStrings) {
+        this(dateStrings[0], dateStrings[1]);
+    }
+
+    public SchedulePanel(String startDateString, String endDateString) {
         setLayout(null);
         setMinimumSize(MINIMUN_SIZE);
-        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail("2020-10-26", "2020-11-02")) {
-            scheduleBlocks.add(new ScheduleBlock(scheduleDetail));
-        }
-        for (ScheduleBlock block : scheduleBlocks) {
+        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail(startDateString, endDateString)) {
+            ScheduleBlock block = new ScheduleBlock(scheduleDetail);
+            scheduleBlocks.add(block);
             add(block);
         }
+    }
+
+    public void useDate(String[] dateStrings) {
+        useDate(dateStrings[0], dateStrings[1]);
+    }
+
+    public void useDate(String startDateString, String endDateString) {
+        for (ScheduleBlock scheduleBlock : scheduleBlocks)
+            remove(scheduleBlock);
+        scheduleBlocks.clear();
+        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail(startDateString, endDateString)) {
+            ScheduleBlock block = new ScheduleBlock(scheduleDetail);
+            scheduleBlocks.add(block);
+            add(block);
+        }
+        repaint();
     }
 
     @Override
@@ -74,7 +97,8 @@ public class SchedulePanel extends JPanel {
             Line2D.Float line = new Line2D.Float(lineLocationX, startLocation.y, lineLocationX,
                     startLocation.y + availableSize.height);
             g2d.draw(line);
-            g2d.drawString(DatabaseEntity.index2WeekString.get(columnIndex), columnIndex * blockSizeWidth + fontLocationX, 25);
+            g2d.drawString(DatabaseEntity.index2WeekString.get(columnIndex),
+                    columnIndex * blockSizeWidth + fontLocationX, 25);
 
         }
         for (ScheduleBlock block : scheduleBlocks) {

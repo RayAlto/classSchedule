@@ -73,14 +73,24 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String newDateString;
                 boolean conformed = false;
+                java.util.Date parsedDate = null;
                 while (!conformed) {
                     newDateString = (String) JOptionPane.showInputDialog(MainFrame.this,
                             "输入查询的日期，可以是一周的某一天，\n如果输入的是周末则会自动跳转到下一周\n格式: YYYY-MM-DD", "跳转",
                             JOptionPane.QUESTION_MESSAGE, null, null, "");
-                    if (newDateString == null || DatabaseEntity.isValidDateString(newDateString))
-                        conformed = true;
-                    else
-                        JOptionPane.showMessageDialog(MainFrame.this, "输入日期无效", "日期解析失败", JOptionPane.ERROR_MESSAGE);
+                    if (newDateString == null) {
+                        return;
+                    } else {
+                        parsedDate = DatabaseEntity.isValidDateString(newDateString);
+                        if (parsedDate != null)
+                            conformed = true;
+                        else
+                            JOptionPane.showMessageDialog(MainFrame.this, "输入日期无效", "解析失败", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                if (conformed) {
+                    String[] weekStartEndDateStrings = DatabaseEntity.getWeekStartEndDateStrings(parsedDate);
+                    corePanel.showSchedulesBetweenDate(weekStartEndDateStrings[0], weekStartEndDateStrings[1]);
                 }
             }
         });
