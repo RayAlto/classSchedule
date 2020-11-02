@@ -8,6 +8,7 @@ import javax.swing.UIManager;
 import top.rayalto.classSchedule.dataTypes.UserConfig;
 import top.rayalto.classSchedule.frames.LoginFrame;
 import top.rayalto.classSchedule.frames.MainFrame;
+import top.rayalto.classSchedule.tables.LessonTable;
 
 public class ClassSchedule {
 
