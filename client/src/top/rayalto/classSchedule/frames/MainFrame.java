@@ -94,6 +94,12 @@ public class MainFrame extends JFrame {
                 }
             }
         });
+        sideBar.lessonButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.LESSON_PANEL);
+            }
+        });
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
