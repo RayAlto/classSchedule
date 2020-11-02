@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 
@@ -38,8 +39,8 @@ public class LoginFrame extends JFrame {
     private JCheckBox rememberPasswordCheckBox = new JCheckBox("记住密码");
     private JButton loginButton = new JButton("登陆");
 
-    public LoginFrame(String title) {
-        super(title);
+    private void initialize() {
+        setTitle("登陆");
         setLayout(null);
         setSize(loginFrameSize);
         add(loginBannerLabel);
@@ -67,6 +68,7 @@ public class LoginFrame extends JFrame {
         add(loginButton);
         loginButton.setFont(Sources.NOTO_SANS_MONO_FONT);
         loginButton.setBounds(125, 170, 250, 50);
+        setLocation((screenSize.width - loginFrameSize.width) / 2, (screenSize.height - loginFrameSize.height) / 2);
         rememberUsernameCheckBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -103,6 +105,7 @@ public class LoginFrame extends JFrame {
                     UserConfig.setConfig("user.password", String.valueOf(passwordTextField.getPassword()));
                     UserConfig.save();
                     UserConfig.logged = true;
+                    new MainFrame();
                     dispatchEvent(new WindowEvent(LoginFrame.this, WindowEvent.WINDOW_CLOSING));
                 } else {
                     JOptionPane.showMessageDialog(LoginFrame.this, "学号和密码不匹配或连接池中没有可用连接", "登陆失败",
@@ -113,15 +116,25 @@ public class LoginFrame extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                synchronized (UserConfig.loginLock) {
+                if (UserConfig.logged)
                     setVisible(false);
-                    UserConfig.loginLock.notify();
+                else {
+                    System.out.println("not logged in, about to exit");
+                    System.exit(0);
                 }
             }
         });
-        setLocation((screenSize.width - loginFrameSize.width) / 2, (screenSize.height - loginFrameSize.height) / 2);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setVisible(true);
+    }
+
+    public LoginFrame() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
