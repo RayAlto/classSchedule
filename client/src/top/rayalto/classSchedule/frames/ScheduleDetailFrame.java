@@ -1,4 +1,4 @@
-package top.rayalto.classSchedule.components;
+package top.rayalto.classSchedule.frames;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -265,7 +265,7 @@ public class ScheduleDetailFrame extends JFrame {
         tabbedPane.add("班级列表", classesListPanel);
         JLabel classesListTabLabel = new JLabel("班级列表");
         classesListTabLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
-        tabbedPane.setTabComponentAt(0, classesListTabLabel);
+        tabbedPane.setTabComponentAt(1, classesListTabLabel);
 
         teachersListPanel.add(teachersListScrollPane);
         teachersListTable.setFont(Sources.NOTO_SANS_MONO_FONT);
@@ -297,7 +297,7 @@ public class ScheduleDetailFrame extends JFrame {
         tabbedPane.add("教师列表", teachersListPanel);
         JLabel teachersListTabLabel = new JLabel("教师列表");
         teachersListTabLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
-        tabbedPane.setTabComponentAt(0, teachersListTabLabel);
+        tabbedPane.setTabComponentAt(2, teachersListTabLabel);
 
         classmatesListPanel.add(classmatesListScrollPane);
         classmatesListTable.setFont(Sources.NOTO_SANS_MONO_FONT);
@@ -329,7 +329,7 @@ public class ScheduleDetailFrame extends JFrame {
         tabbedPane.add("同学列表", classmatesListPanel);
         JLabel classmaatesListTabLabel = new JLabel("同学列表");
         classmaatesListTabLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
-        tabbedPane.setTabComponentAt(0, classmaatesListTabLabel);
+        tabbedPane.setTabComponentAt(3, classmaatesListTabLabel);
 
         tabbedPane.addChangeListener(new ChangeListener() {
             @Override

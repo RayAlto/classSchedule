@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 
 import top.rayalto.classSchedule.Sources;
 import top.rayalto.classSchedule.dataTypes.ScheduleDetail;
+import top.rayalto.classSchedule.frames.ScheduleDetailFrame;
 
 class DarkTextArea extends JTextArea {
     private static final long serialVersionUID = 1L;
