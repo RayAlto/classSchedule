@@ -9,20 +9,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 import top.rayalto.classSchedule.Sources;
-import top.rayalto.classSchedule.dataTypes.Classmate;
 import top.rayalto.classSchedule.dataTypes.ScheduleDetail;
-import top.rayalto.classSchedule.dataTypes.SchoolClass;
-import top.rayalto.classSchedule.dataTypes.Teacher;
 import top.rayalto.classSchedule.database.DatabaseEntity;
+import top.rayalto.classSchedule.tables.ClassTable;
+import top.rayalto.classSchedule.tables.ClassmateTable;
+import top.rayalto.classSchedule.tables.TeacherTable;
 
 public class ScheduleDetailFrame extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -67,40 +64,16 @@ public class ScheduleDetailFrame extends JFrame {
     private JTextField scheduleTextTextField = new JTextField();
 
     private JPanel classesListPanel = new JPanel(new GridLayout(1, 0));
-    private DefaultTableModel classesListTableModel = new DefaultTableModel() {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
-    private JTable classesListTable = new JTable(classesListTableModel);
-    private JScrollPane classesListScrollPane = new JScrollPane(classesListTable);
+    private ClassTable classTable = new ClassTable();
+    private JScrollPane classesListScrollPane = new JScrollPane(classTable);
 
     private JPanel teachersListPanel = new JPanel(new GridLayout(1, 0));
-    private DefaultTableModel teachersListTableModel = new DefaultTableModel() {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
-    private JTable teachersListTable = new JTable(teachersListTableModel);
-    private JScrollPane teachersListScrollPane = new JScrollPane(teachersListTable);
+    private TeacherTable teacherTable = new TeacherTable();
+    private JScrollPane teachersListScrollPane = new JScrollPane(teacherTable);
 
     private JPanel classmatesListPanel = new JPanel(new GridLayout(1, 0));
-    private DefaultTableModel classmatesListTableModel = new DefaultTableModel() {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
-    private JTable classmatesListTable = new JTable(classmatesListTableModel);
-    private JScrollPane classmatesListScrollPane = new JScrollPane(classmatesListTable);
+    private ClassmateTable classmateTable = new ClassmateTable();
+    private JScrollPane classmatesListScrollPane = new JScrollPane(classmateTable);
 
     public ScheduleDetailFrame(ScheduleDetail scheduleDetail) {
         this.scheduleDetail = scheduleDetail;
@@ -242,90 +215,22 @@ public class ScheduleDetailFrame extends JFrame {
         basicTabLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         tabbedPane.setTabComponentAt(0, basicTabLabel);
 
+        classTable.addRows(scheduleDetail.classes);
         classesListPanel.add(classesListScrollPane);
-        classesListTable.setFont(Sources.NOTO_SANS_MONO_FONT);
-        classesListTable.getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
-        classesListTable.setFillsViewportHeight(true);
-        classesListTableModel.addColumn("ID");
-        classesListTableModel.addColumn("代码");
-        classesListTableModel.addColumn("名称");
-        classesListTableModel.addColumn("年级");
-        classesListTableModel.addColumn("学生数");
-        TableColumnModel classesColumnModel = classesListTable.getColumnModel();
-        classesColumnModel.getColumn(0).setPreferredWidth(40);
-        classesColumnModel.getColumn(1).setPreferredWidth(105);
-        classesColumnModel.getColumn(2).setPreferredWidth(150);
-        classesColumnModel.getColumn(3).setPreferredWidth(40);
-        classesColumnModel.getColumn(4).setPreferredWidth(40);
-        for (SchoolClass schoolClass : scheduleDetail.classes) {
-            classesListTableModel.addRow(new Object[] { String.valueOf(schoolClass.id), schoolClass.code,
-                    schoolClass.className, schoolClass.grade, String.valueOf(schoolClass.studentCount) });
-        }
-
         tabbedPane.add("班级列表", classesListPanel);
         JLabel classesListTabLabel = new JLabel("班级列表");
         classesListTabLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         tabbedPane.setTabComponentAt(1, classesListTabLabel);
 
+        teacherTable.addRows(scheduleDetail.teachers);
         teachersListPanel.add(teachersListScrollPane);
-        teachersListTable.setFont(Sources.NOTO_SANS_MONO_FONT);
-        teachersListTable.getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
-        teachersListTable.setFillsViewportHeight(true);
-        teachersListTableModel.addColumn("ID");
-        teachersListTableModel.addColumn("代码");
-        teachersListTableModel.addColumn("雇佣类型");
-        teachersListTableModel.addColumn("姓名");
-        teachersListTableModel.addColumn("年龄");
-        teachersListTableModel.addColumn("所属学院ID");
-        teachersListTableModel.addColumn("所属学院名");
-        teachersListTableModel.addColumn("职位");
-        TableColumnModel teachersColumnModel = teachersListTable.getColumnModel();
-        teachersColumnModel.getColumn(0).setPreferredWidth(40);
-        teachersColumnModel.getColumn(1).setPreferredWidth(90);
-        teachersColumnModel.getColumn(2).setPreferredWidth(75);
-        teachersColumnModel.getColumn(3).setPreferredWidth(90);
-        teachersColumnModel.getColumn(4).setPreferredWidth(30);
-        teachersColumnModel.getColumn(5).setPreferredWidth(75);
-        teachersColumnModel.getColumn(6).setPreferredWidth(105);
-        teachersColumnModel.getColumn(7).setPreferredWidth(60);
-        for (Teacher teacher : scheduleDetail.teachers) {
-            teachersListTableModel.addRow(new Object[] { String.valueOf(teacher.id), teacher.code, teacher.hireType,
-                    teacher.teacherName, String.valueOf(teacher.age), String.valueOf(teacher.departmentId),
-                    teacher.departmentName, teacher.title });
-        }
-
         tabbedPane.add("教师列表", teachersListPanel);
         JLabel teachersListTabLabel = new JLabel("教师列表");
         teachersListTabLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         tabbedPane.setTabComponentAt(2, teachersListTabLabel);
 
+        classmateTable.addRows(scheduleDetail.classmates);
         classmatesListPanel.add(classmatesListScrollPane);
-        classmatesListTable.setFont(Sources.NOTO_SANS_MONO_FONT);
-        classmatesListTable.getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
-        classmatesListTable.setFillsViewportHeight(true);
-        classmatesListTableModel.addColumn("代码");
-        classmatesListTableModel.addColumn("姓名");
-        classmatesListTableModel.addColumn("性别");
-        classmatesListTableModel.addColumn("班级ID");
-        classmatesListTableModel.addColumn("班级名");
-        classmatesListTableModel.addColumn("所属专业名");
-        classmatesListTableModel.addColumn("所属学院ID");
-        classmatesListTableModel.addColumn("所属学院名");
-        TableColumnModel classmatesColumnModel = classmatesListTable.getColumnModel();
-        classmatesColumnModel.getColumn(0).setPreferredWidth(90);
-        classmatesColumnModel.getColumn(1).setPreferredWidth(90);
-        classmatesColumnModel.getColumn(2).setPreferredWidth(30);
-        classmatesColumnModel.getColumn(3).setPreferredWidth(45);
-        classmatesColumnModel.getColumn(4).setPreferredWidth(100);
-        classmatesColumnModel.getColumn(5).setPreferredWidth(105);
-        classmatesColumnModel.getColumn(6).setPreferredWidth(75);
-        classmatesColumnModel.getColumn(7).setPreferredWidth(105);
-        for (Classmate classmate : scheduleDetail.classmates) {
-            classmatesListTableModel.addRow(new Object[] { classmate.code, classmate.classmateName, classmate.gender,
-                    String.valueOf(classmate.classId), classmate.className, classmate.majorName,
-                    String.valueOf(classmate.departmentId), classmate.departmentName });
-        }
-
         tabbedPane.add("同学列表", classmatesListPanel);
         JLabel classmaatesListTabLabel = new JLabel("同学列表");
         classmaatesListTabLabel.setFont(Sources.NOTO_SANS_MONO_FONT);

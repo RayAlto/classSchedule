@@ -373,6 +373,26 @@ public class DatabaseEntity {
         return classmate;
     }
 
+    public static List<Classmate> getClassmates() {
+        List<Classmate> classmate = new ArrayList<Classmate>();
+        System.out.print("getting connection ... ");
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM classmate");
+            while (resultSet.next()) {
+                classmate.add(new Classmate(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getInt(4), resultSet.getString(5), resultSet.getString(6), resultSet.getInt(7),
+                        resultSet.getString(8)));
+            }
+            System.out.format("got %d results%n", classmate.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return classmate;
+    }
+
     public static Teacher getTeacher(int id) {
         System.out.print("getting connection ... ");
         Teacher teacher = null;
@@ -408,6 +428,26 @@ public class DatabaseEntity {
             String queryString = "SELECT * FROM teacher WHERE id IN (" + String.join(", ", idStrings) + ')';
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(queryString);
+            while (resultSet.next()) {
+                teachers.add(new Teacher(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getInt(5), resultSet.getInt(6), resultSet.getString(7),
+                        resultSet.getString(8)));
+            }
+            System.out.format("got %d results%n", teachers.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return teachers;
+    }
+
+    public static List<Teacher> getTeachers() {
+        List<Teacher> teachers = new ArrayList<Teacher>();
+        System.out.print("getting connection ... ");
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM teacher");
             while (resultSet.next()) {
                 teachers.add(new Teacher(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(5), resultSet.getInt(6), resultSet.getString(7),
@@ -490,6 +530,24 @@ public class DatabaseEntity {
         return departments;
     }
 
+    public static List<Department> getDepartments() {
+        List<Department> departments = new ArrayList<Department>();
+        System.out.print("getting connection ... ");
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM department");
+            while (resultSet.next()) {
+                departments.add(new Department(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
+            }
+            System.out.format("got %d results%n", departments.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return departments;
+    }
+
     public static SchoolClass getClass(int id) {
         System.out.print("getting connection ... ");
         SchoolClass schoolClass = null;
@@ -525,6 +583,26 @@ public class DatabaseEntity {
             idStrings.addAll(ids.stream().map(String::valueOf).collect(Collectors.toList()));
             String queryString = "SELECT * FROM class WHERE id IN (" + String.join(", ", idStrings) + ')';
             ResultSet resultSet = statement.executeQuery(queryString);
+            while (resultSet.next()) {
+                schoolClasses.add(new SchoolClass(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getInt(5)));
+            }
+            System.out.format("got %d result%n", schoolClasses.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return schoolClasses;
+    }
+
+    public static List<SchoolClass> getClasses() {
+        System.out.print("getting connection ... ");
+        List<SchoolClass> schoolClasses = new ArrayList<SchoolClass>();
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM class");
             while (resultSet.next()) {
                 schoolClasses.add(new SchoolClass(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(5)));
@@ -582,6 +660,25 @@ public class DatabaseEntity {
         return rooms;
     }
 
+    public static List<Room> getRooms() {
+        System.out.print("getting connection ... ");
+        List<Room> rooms = new ArrayList<Room>();
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM room");
+            while (resultSet.next()) {
+                rooms.add(new Room(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
+            }
+            System.out.format("got %d result%n", rooms.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return rooms;
+    }
+
     public static LessonType getLessonType(int id) {
         System.out.print("getting connection ... ");
         LessonType lessonType = null;
@@ -627,6 +724,25 @@ public class DatabaseEntity {
         return lessonTypes;
     }
 
+    public static List<LessonType> getLessonTypes() {
+        System.out.print("getting connection ... ");
+        List<LessonType> lessonTypes = new ArrayList<LessonType>();
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM lessonType");
+            while (resultSet.next()) {
+                lessonTypes.add(new LessonType(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
+            }
+            System.out.format("got %d result%n", lessonTypes.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return lessonTypes;
+    }
+
     public static ExamMode getExamMode(int id) {
         System.out.print("getting connection ... ");
         ExamMode examMode = null;
@@ -661,6 +777,25 @@ public class DatabaseEntity {
             idStrings.addAll(ids.stream().map(String::valueOf).collect(Collectors.toList()));
             String queryString = "SELECT * FROM examMode WHERE id IN (" + String.join(", ", idStrings) + ')';
             ResultSet resultSet = statement.executeQuery(queryString);
+            while (resultSet.next()) {
+                examModes.add(new ExamMode(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
+            }
+            System.out.format("got %d result%n", examModes.size());
+        } catch (SQLException e) {
+            System.err.println("SQL Error");
+            e.printStackTrace();
+        }
+        return examModes;
+    }
+
+    public static List<ExamMode> getExamModes() {
+        System.out.print("getting connection ... ");
+        List<ExamMode> examModes = new ArrayList<ExamMode>();
+        try (Connection connection = poolDataSource.getConnection()) {
+            System.out.println("done");
+            System.out.print("executing query ... ");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM examMode");
             while (resultSet.next()) {
                 examModes.add(new ExamMode(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3)));
             }

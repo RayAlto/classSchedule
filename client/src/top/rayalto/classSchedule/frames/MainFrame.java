@@ -100,6 +100,54 @@ public class MainFrame extends JFrame {
                 corePanel.showTab(CorePanel.LESSON_PANEL);
             }
         });
+        sideBar.classmateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.CLASSMATE_PANEL);
+            }
+        });
+        sideBar.teacherButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.TEACHER_PANEL);
+            }
+        });
+        sideBar.classButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.CLASS_PANEL);
+            }
+        });
+        sideBar.departmentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.DEPARTMENT_PANEL);
+            }
+        });
+        sideBar.roomButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.ROOM_PANEL);
+            }
+        });
+        sideBar.lessonTypeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.LESSON_TYPE_PANEL);
+            }
+        });
+        sideBar.examModeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.EXAM_MODE_PANEL);
+            }
+        });
+        sideBar.userButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                corePanel.showTab(CorePanel.USER_PANEL);
+            }
+        });
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
