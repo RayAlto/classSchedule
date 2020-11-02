@@ -3,11 +3,11 @@ package top.rayalto.classSchedule.tables;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import top.rayalto.classSchedule.Sources;
-import top.rayalto.classSchedule.dataTypes.LessonType;
 import top.rayalto.classSchedule.dataTypes.LessonType;
 
 public class LessonTypeTable extends JTable {
@@ -21,7 +21,7 @@ public class LessonTypeTable extends JTable {
         return false;
     }
 
-    public LessonTypeTable() {
+    private void initialize(List<LessonType> lessonTypes) {
         setFont(Sources.NOTO_SANS_MONO_FONT);
         getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
         tableModel.addColumn("ID");
@@ -30,13 +30,24 @@ public class LessonTypeTable extends JTable {
         tableColumnModel.getColumn(0).setPreferredWidth(45);
         tableColumnModel.getColumn(1).setPreferredWidth(45);
         tableColumnModel.getColumn(2).setPreferredWidth(100);
+        if (lessonTypes != null) {
+            for (LessonType lessonType : lessonTypes) {
+                addRow(lessonType);
+            }
+        }
+    }
+
+    public LessonTypeTable() {
+        this(null);
     }
 
     public LessonTypeTable(List<LessonType> lessonTypes) {
-        this();
-        for (LessonType lessonType : lessonTypes) {
-            addRow(lessonType);
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize(lessonTypes);
+            }
+        });
     }
 
     public void addRow(LessonType lessonType) {

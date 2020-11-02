@@ -3,6 +3,7 @@ package top.rayalto.classSchedule.tables;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -20,7 +21,7 @@ public class ExamModeTable extends JTable {
         return false;
     }
 
-    public ExamModeTable() {
+    private void initialize(List<ExamMode> examModes) {
         setFont(Sources.NOTO_SANS_MONO_FONT);
         getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
         tableModel.addColumn("ID");
@@ -29,13 +30,24 @@ public class ExamModeTable extends JTable {
         tableColumnModel.getColumn(0).setPreferredWidth(30);
         tableColumnModel.getColumn(1).setPreferredWidth(30);
         tableColumnModel.getColumn(2).setPreferredWidth(75);
+        if (examModes != null) {
+            for (ExamMode examMode : examModes) {
+                addRow(examMode);
+            }
+        }
+    }
+
+    public ExamModeTable() {
+        this(null);
     }
 
     public ExamModeTable(List<ExamMode> examModes) {
-        this();
-        for (ExamMode examMode : examModes) {
-            addRow(examMode);
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize(examModes);
+            }
+        });
     }
 
     public void addRow(ExamMode examMode) {

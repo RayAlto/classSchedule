@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 
 import top.rayalto.classSchedule.Sources;
 
@@ -34,7 +35,7 @@ public class SideBar extends JPanel {
 
     private boolean _folded = false;
 
-    public SideBar() {
+    private void initialize(){
         setBackground(Color.DARK_GRAY);
         buttonsPanel.setBackground(Color.DARK_GRAY);
         scrollButtonsPanel.setBackground(Color.DARK_GRAY);
@@ -62,14 +63,6 @@ public class SideBar extends JPanel {
         lessonTypeButton.setToolTipText("课程类型列表，可以查看你所选的所有课程的所有类型");
         examModeButton.setToolTipText("考试模式列表，可以查看你所选课程的所有考试模式");
         userButton.setToolTipText("用户信息，可以查看你的信息");
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                Dimension sideBarSize = getSize();
-                sideBarBanner.setSize(sideBarSize.width, 50);
-                scrollButtonsPanel.setSize(sideBarSize.width, sideBarSize.height > 702 ? 652 : sideBarSize.height - 50);
-            }
-        });
         add(sideBarBanner);
         sideBarBanner.setLocation(0, 0);
         sideBarBanner.setSize(230, 50);
@@ -88,6 +81,23 @@ public class SideBar extends JPanel {
         scrollButtonsPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrollButtonsPanel);
         scrollButtonsPanel.setLocation(0, 50);
+    }
+
+    public SideBar() {
+        SwingUtilities.invokeLater(new Runnable(){
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Dimension sideBarSize = getSize();
+                sideBarBanner.setSize(sideBarSize.width, 50);
+                scrollButtonsPanel.setSize(sideBarSize.width, sideBarSize.height > 702 ? 652 : sideBarSize.height - 50);
+            }
+        });
     }
 
     public boolean isFolded() {

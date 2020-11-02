@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import top.rayalto.classSchedule.components.CorePanel;
@@ -25,11 +26,10 @@ public class MainFrame extends JFrame {
     private static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     private SideBar sideBar = new SideBar();
-
     private CorePanel corePanel = new CorePanel();
 
-    public MainFrame(String title) {
-        setTitle(title);
+    private void initialize(){
+        updateTitle();
         setMinimumSize(mainFrameMinimunSize);
         setLayout(null);
         setSize(mainFrameSize);
@@ -39,6 +39,21 @@ public class MainFrame extends JFrame {
         add(corePanel);
         corePanel.setLocation(230, 0);
         corePanel.setSize(670, 702);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    private void updateTitle() {
+        setTitle("classSchedule 当前日期: " + corePanel.getScheduleStartDate() + " - " + corePanel.getScheduleEndDate());
+    }
+
+    public MainFrame() {
+        SwingUtilities.invokeLater(new Runnable(){
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -91,6 +106,7 @@ public class MainFrame extends JFrame {
                 if (conformed) {
                     String[] weekStartEndDateStrings = DatabaseEntity.getWeekStartEndDateStrings(parsedDate);
                     corePanel.showSchedulesBetweenDate(weekStartEndDateStrings[0], weekStartEndDateStrings[1]);
+                    updateTitle();
                 }
             }
         });
@@ -148,8 +164,6 @@ public class MainFrame extends JFrame {
                 corePanel.showTab(CorePanel.USER_PANEL);
             }
         });
-        setVisible(true);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     public void foldSideBar(boolean fold) {

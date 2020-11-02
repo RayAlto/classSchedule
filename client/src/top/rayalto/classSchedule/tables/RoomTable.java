@@ -3,6 +3,7 @@ package top.rayalto.classSchedule.tables;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -20,7 +21,7 @@ public class RoomTable extends JTable {
         return false;
     }
 
-    public RoomTable() {
+    private void initialize(List<Room> rooms) {
         setFont(Sources.NOTO_SANS_MONO_FONT);
         getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
         tableModel.addColumn("ID");
@@ -29,13 +30,24 @@ public class RoomTable extends JTable {
         tableColumnModel.getColumn(0).setPreferredWidth(45);
         tableColumnModel.getColumn(1).setPreferredWidth(60);
         tableColumnModel.getColumn(2).setPreferredWidth(100);
+        if (rooms != null) {
+            for (Room room : rooms) {
+                addRow(room);
+            }
+        }
+    }
+
+    public RoomTable() {
+        this(null);
     }
 
     public RoomTable(List<Room> rooms) {
-        this();
-        for (Room room : rooms) {
-            addRow(room);
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize(rooms);
+            }
+        });
     }
 
     public void addRow(Room room) {

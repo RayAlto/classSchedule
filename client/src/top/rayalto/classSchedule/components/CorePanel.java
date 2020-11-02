@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import top.rayalto.classSchedule.dataTypes.UserConfig;
 import top.rayalto.classSchedule.database.DatabaseEntity;
@@ -69,7 +70,7 @@ public class CorePanel extends JPanel {
 
     private UserPanel userPanel = new UserPanel(DatabaseEntity.getUser(UserConfig.getConfig("user.username")));
 
-    public CorePanel() {
+    private void initialize() {
         setLayout(card);
         add(schedulePanel, SCHEDULE_PANEL);
         lessonListPanel.add(lessonScrollPane);
@@ -91,11 +92,28 @@ public class CorePanel extends JPanel {
         add(userPanel, USER_PANEL);
     }
 
+    public CorePanel() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
+    }
+
     public void showTab(String name) {
         card.show(this, name);
     }
 
     public void showSchedulesBetweenDate(String startDate, String endDate) {
         schedulePanel.useDate(startDate, endDate);
+    }
+
+    public String getScheduleStartDate() {
+        return schedulePanel.getStartDate();
+    }
+
+    public String getScheduleEndDate() {
+        return schedulePanel.getEndDate();
     }
 }

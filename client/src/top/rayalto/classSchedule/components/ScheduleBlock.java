@@ -16,6 +16,7 @@ import java.util.Calendar;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import top.rayalto.classSchedule.Sources;
 import top.rayalto.classSchedule.dataTypes.ScheduleDetail;
@@ -28,13 +29,22 @@ class DarkTextArea extends JTextArea {
         this(null);
     }
 
-    public DarkTextArea(String text) {
-        super(text);
+    private void initialize() {
         setOpaque(false);
         setForeground(Color.DARK_GRAY);
         setFont(Sources.NOTO_SANS_MONO_FONT);
         setEditable(false);
         setLineWrap(true);
+    }
+
+    public DarkTextArea(String text) {
+        super(text);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
     }
 
     @Override
@@ -69,8 +79,7 @@ public class ScheduleBlock extends JButton {
     private DarkTextArea roomNameTextArea = new DarkTextArea();
     private DarkTextArea timeInfoTextArea = new DarkTextArea();
 
-    public ScheduleBlock(ScheduleDetail scheduleDetail) {
-        this.scheduleDetail = scheduleDetail;
+    private void initialize() {
         setBorder(null);
         setContentAreaFilled(false);
         lessonNameTextArea.setText(scheduleDetail.lessonInfo.nameZh);
@@ -87,6 +96,16 @@ public class ScheduleBlock extends JButton {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new ScheduleDetailFrame(scheduleDetail);
+            }
+        });
+    }
+
+    public ScheduleBlock(ScheduleDetail scheduleDetail) {
+        this.scheduleDetail = scheduleDetail;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize();
             }
         });
     }

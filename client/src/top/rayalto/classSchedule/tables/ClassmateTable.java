@@ -3,6 +3,7 @@ package top.rayalto.classSchedule.tables;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -20,7 +21,7 @@ public class ClassmateTable extends JTable {
         return false;
     }
 
-    public ClassmateTable() {
+    private void initialize(List<Classmate> classmates) {
         setFont(Sources.NOTO_SANS_MONO_FONT);
         getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
         tableModel.addColumn("代码");
@@ -39,13 +40,24 @@ public class ClassmateTable extends JTable {
         tableColumnModel.getColumn(5).setPreferredWidth(105);
         tableColumnModel.getColumn(6).setPreferredWidth(75);
         tableColumnModel.getColumn(7).setPreferredWidth(105);
+        if (classmates != null) {
+            for (Classmate classmate : classmates) {
+                addRow(classmate);
+            }
+        }
+    }
+
+    public ClassmateTable() {
+        this(null);
     }
 
     public ClassmateTable(List<Classmate> classmates) {
-        this();
-        for (Classmate classmate : classmates) {
-            addRow(classmate);
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize(classmates);
+            }
+        });
     }
 
     public void addRow(Classmate classmate) {

@@ -3,6 +3,7 @@ package top.rayalto.classSchedule.tables;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -20,7 +21,7 @@ public class DepartmentTable extends JTable {
         return false;
     }
 
-    public DepartmentTable() {
+    private void initialize(List<Department> departments) {
         setFont(Sources.NOTO_SANS_MONO_FONT);
         getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
         tableModel.addColumn("学院ID");
@@ -29,13 +30,24 @@ public class DepartmentTable extends JTable {
         tableColumnModel.getColumn(0).setPreferredWidth(45);
         tableColumnModel.getColumn(1).setPreferredWidth(45);
         tableColumnModel.getColumn(2).setPreferredWidth(100);
+        if (departments != null) {
+            for (Department department : departments) {
+                addRow(department);
+            }
+        }
+    }
+
+    public DepartmentTable() {
+        this(null);
     }
 
     public DepartmentTable(List<Department> departments) {
-        this();
-        for (Department department : departments) {
-            addRow(department);
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize(departments);
+            }
+        });
     }
 
     public void addRow(Department department) {

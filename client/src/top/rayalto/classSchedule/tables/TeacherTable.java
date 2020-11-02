@@ -3,6 +3,7 @@ package top.rayalto.classSchedule.tables;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -20,7 +21,7 @@ public class TeacherTable extends JTable {
         return false;
     }
 
-    public TeacherTable() {
+    private void initialize(List<Teacher> teachers) {
         setFont(Sources.NOTO_SANS_MONO_FONT);
         getTableHeader().setFont(Sources.NOTO_SANS_MONO_FONT);
         tableModel.addColumn("ID");
@@ -39,13 +40,24 @@ public class TeacherTable extends JTable {
         tableColumnModel.getColumn(5).setPreferredWidth(75);
         tableColumnModel.getColumn(6).setPreferredWidth(105);
         tableColumnModel.getColumn(7).setPreferredWidth(60);
-    }
-
-    public TeacherTable(List<Teacher> teachers) {
-        this();
+        if (teachers != null) {
         for (Teacher teacher : teachers) {
             addRow(teacher);
         }
+        }
+    }
+
+    public TeacherTable() {
+        this(null);
+    }
+
+    public TeacherTable(List<Teacher> teachers) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize(teachers);
+            }
+        });
     }
 
     public void addRow(Teacher teacher) {

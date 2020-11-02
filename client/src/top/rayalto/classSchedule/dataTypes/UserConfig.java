@@ -21,7 +21,6 @@ public class UserConfig {
     private static boolean _loaded = false;
 
     public static boolean logged = false;
-    public static Object loginLock = new Object();
 
     static {
         if (Files.exists(configFileDirPath)) {

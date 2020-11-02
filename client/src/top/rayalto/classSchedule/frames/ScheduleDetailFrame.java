@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -75,8 +76,7 @@ public class ScheduleDetailFrame extends JFrame {
     private ClassmateTable classmateTable = new ClassmateTable();
     private JScrollPane classmatesListScrollPane = new JScrollPane(classmateTable);
 
-    public ScheduleDetailFrame(ScheduleDetail scheduleDetail) {
-        this.scheduleDetail = scheduleDetail;
+    private void initialize() {
         setTitle(String.join(" ", scheduleDetail.lessonInfo.nameZh, scheduleDetail.scheduleInfo.getTimeInfoString(),
                 "详细信息"));
         setSize(600, 550);
@@ -265,5 +265,15 @@ public class ScheduleDetailFrame extends JFrame {
         add(tabbedPane);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setVisible(true);
+    }
+
+    public ScheduleDetailFrame(ScheduleDetail scheduleDetail) {
+        this.scheduleDetail = scheduleDetail;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
     }
 }

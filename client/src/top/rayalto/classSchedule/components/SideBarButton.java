@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 
 import top.rayalto.classSchedule.Sources;
 
@@ -14,6 +15,13 @@ public class SideBarButton extends JButton {
     private Color hoverBackgroundColor = Color.GRAY;
     private Color pressedBackgroundColor = Color.LIGHT_GRAY;
 
+    private void initialize(){
+        setBackground(Color.DARK_GRAY);
+        setForeground(Color.WHITE);
+        setIconTextGap(45);
+        setFont(Sources.NOTO_SANS_MONO_FONT);
+    }
+
     public SideBarButton() {
         this(null);
     }
@@ -21,10 +29,12 @@ public class SideBarButton extends JButton {
     public SideBarButton(String text) {
         super(text);
         super.setContentAreaFilled(false);
-        setBackground(Color.DARK_GRAY);
-        setForeground(Color.WHITE);
-        setIconTextGap(45);
-        setFont(Sources.NOTO_SANS_MONO_FONT);
+        SwingUtilities.invokeLater(new Runnable(){
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
     }
 
     @Override

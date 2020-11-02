@@ -3,13 +3,15 @@ package top.rayalto.classSchedule.components;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import top.rayalto.classSchedule.Sources;
 import top.rayalto.classSchedule.dataTypes.User;
-import top.rayalto.classSchedule.database.DatabaseEntity;
 
 public class UserPanel extends JPanel {
     private static final long serialVersionUID = 1L;
+
+    private User user;
 
     private JLabel codeLabel = new JLabel("学号:");
     private JLabel passwordHashLabel = new JLabel("密码哈希:");
@@ -33,7 +35,7 @@ public class UserPanel extends JPanel {
     private JTextField homeAddressTextField = new JTextField();
     private JTextField mobilePhoneTextField = new JTextField();
 
-    public UserPanel(User user) {
+    private void initialize() {
         codeLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         passwordHashLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         realNameLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
@@ -120,5 +122,15 @@ public class UserPanel extends JPanel {
         homeAddressTextField.setBounds(85, 245, 500, 30);
         add(mobilePhoneTextField);
         mobilePhoneTextField.setBounds(85, 275, 500, 30);
+    }
+
+    public UserPanel(User user) {
+        this.user = user;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
     }
 }

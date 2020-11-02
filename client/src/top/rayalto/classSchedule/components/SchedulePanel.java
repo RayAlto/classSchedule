@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import top.rayalto.classSchedule.Sources;
 import top.rayalto.classSchedule.dataTypes.ScheduleDetail;
@@ -24,7 +25,20 @@ public class SchedulePanel extends JPanel {
     private final int DAY_BEGIN = 8;
     private final int DAY_END = 22;
 
+    private String startDateString;
+    private String endDateString;
+
     private List<ScheduleBlock> scheduleBlocks = new ArrayList<ScheduleBlock>();
+
+    private void initialize() {
+        setLayout(null);
+        setMinimumSize(MINIMUN_SIZE);
+        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail(startDateString, endDateString)) {
+            ScheduleBlock block = new ScheduleBlock(scheduleDetail);
+            scheduleBlocks.add(block);
+            add(block);
+        }
+    }
 
     public SchedulePanel() {
         this(DatabaseEntity.getCurrentWeekStartEndStrings());
@@ -35,13 +49,14 @@ public class SchedulePanel extends JPanel {
     }
 
     public SchedulePanel(String startDateString, String endDateString) {
-        setLayout(null);
-        setMinimumSize(MINIMUN_SIZE);
-        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail(startDateString, endDateString)) {
-            ScheduleBlock block = new ScheduleBlock(scheduleDetail);
-            scheduleBlocks.add(block);
-            add(block);
-        }
+        this.startDateString = startDateString;
+        this.endDateString = endDateString;
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initialize();
+            }
+        });
     }
 
     public void useDate(String[] dateStrings) {
@@ -58,6 +73,14 @@ public class SchedulePanel extends JPanel {
             add(block);
         }
         repaint();
+    }
+
+    public String getStartDate() {
+        return startDateString;
+    }
+
+    public String getEndDate() {
+        return endDateString;
     }
 
     @Override
