@@ -77,13 +77,14 @@ public class DatabaseEntity {
         System.out.println("connection pool initialized");
     }
 
-    public static boolean isValidDateString(String dateString) {
+    public static java.util.Date isValidDateString(String dateString) {
+        java.util.Date date = null;
         try {
-            dateFormat.parse(dateString);
+            date = dateFormat.parse(dateString);
         } catch (ParseException pe) {
-            return false;
+            return null;
         }
-        return true;
+        return date;
     }
 
     public static String generateDateString(int year, int month, int day) {
@@ -114,6 +115,20 @@ public class DatabaseEntity {
         calendar.add(Calendar.DATE, 6);
         String endDateString = dateFormat.format(calendar.getTime());
         return new String[] { startDateString, endDateString };
+    }
+
+    public static String[] getWeekStartEndDateStrings(java.util.Date currentDate) {
+        calendar.setTime(currentDate);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        String startDateString = dateFormat.format(calendar.getTime());
+        calendar.add(Calendar.DATE, 6);
+        String endDateString = dateFormat.format(calendar.getTime());
+        return new String[] { startDateString, endDateString };
+    }
+
+    public static String[] getCurrentWeekStartEndStrings() {
+        return getWeekStartEndDateStrings(
+                java.util.Date.from(java.time.LocalDate.now().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()));
     }
 
     public static boolean login(String username, String password) {
