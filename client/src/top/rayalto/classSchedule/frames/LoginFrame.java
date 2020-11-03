@@ -165,14 +165,14 @@ public class LoginFrame extends JFrame {
                         && UserConfig.getConfig("login.rememberUsername").equals("true")) {
                     usernameTextField.setText(UserConfig.getConfig("user.username"));
                     rememberUsernameCheckBox.setSelected(true);
-                    rememberUsernameCheckBox.setEnabled(true);
                 }
                 if (UserConfig.getConfig("login.rememberUsername") != null
-                        && UserConfig.getConfig("login.rememberUsername").equals("true")) {
+                && UserConfig.getConfig("login.rememberUsername").equals("true")) {
                     passwordTextField.setText(UserConfig.getConfig("user.password"));
                     rememberPasswordCheckBox.setSelected(true);
-                    rememberPasswordCheckBox.setEnabled(true);
                 }
+                rememberUsernameCheckBox.setEnabled(true);
+                rememberPasswordCheckBox.setEnabled(true);
             }
         }.execute();
     }
