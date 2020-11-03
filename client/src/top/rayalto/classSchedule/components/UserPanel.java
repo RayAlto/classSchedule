@@ -142,10 +142,10 @@ public class UserPanel extends JPanel {
         emailTextField.setText(user.email);
         homeAddressTextField.setText(user.homeAddress);
         mobilePhoneTextField.setText(user.mobilePhone);
-
     }
 
     public void setUser(User user) {
         this.user = user;
+        updateUserInfo();
     }
 }
