@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import top.rayalto.classSchedule.dataTypes.UserConfig;
 import top.rayalto.classSchedule.database.DatabaseEntity;
@@ -36,39 +37,39 @@ public class CorePanel extends JPanel {
 
     private SchedulePanel schedulePanel = new SchedulePanel();
 
-    private LessonTable lessonTable = new LessonTable(DatabaseEntity.getLessons());
+    private LessonTable lessonTable = new LessonTable();
     private JPanel lessonListPanel = new JPanel(new GridLayout(1, 0));
     private JScrollPane lessonScrollPane = new JScrollPane(lessonTable);
 
-    private ClassmateTable classmateTable = new ClassmateTable(DatabaseEntity.getClassmates());
+    private ClassmateTable classmateTable = new ClassmateTable();
     private JPanel classmateListPanel = new JPanel(new GridLayout(1, 0));
     private JScrollPane classmateScrollPane = new JScrollPane(classmateTable);
 
-    private TeacherTable teacherTable = new TeacherTable(DatabaseEntity.getTeachers());
+    private TeacherTable teacherTable = new TeacherTable();
     private JPanel teacherListPanel = new JPanel(new GridLayout(1, 0));
     private JScrollPane teacherScrollPane = new JScrollPane(teacherTable);
 
-    private ClassTable classTable = new ClassTable(DatabaseEntity.getClasses());
+    private ClassTable classTable = new ClassTable();
     private JPanel classListPanel = new JPanel(new GridLayout(1, 0));
     private JScrollPane classScrollPane = new JScrollPane(classTable);
 
-    private DepartmentTable departmentTable = new DepartmentTable(DatabaseEntity.getDepartments());
+    private DepartmentTable departmentTable = new DepartmentTable();
     private JPanel departmentListPanel = new JPanel(new GridLayout(1, 0));
     private JScrollPane departmentScrollPane = new JScrollPane(departmentTable);
 
-    private RoomTable roomTable = new RoomTable(DatabaseEntity.getRooms());
+    private RoomTable roomTable = new RoomTable();
     private JPanel roomListPanel = new JPanel(new GridLayout(1, 0));
     private JScrollPane roomScrollPane = new JScrollPane(roomTable);
 
-    private LessonTypeTable lessonTypeTable = new LessonTypeTable(DatabaseEntity.getLessonTypes());
+    private LessonTypeTable lessonTypeTable = new LessonTypeTable();
     private JPanel lessonTypeListPanel = new JPanel(new GridLayout(1, 0));
     private JScrollPane lessonTypeScrollPane = new JScrollPane(lessonTypeTable);
 
-    private ExamModeTable examModeTable = new ExamModeTable(DatabaseEntity.getExamModes());
+    private ExamModeTable examModeTable = new ExamModeTable();
     private JPanel examModeListPanel = new JPanel(new GridLayout(1, 0));
     private JScrollPane examModeScrollPane = new JScrollPane(examModeTable);
 
-    private UserPanel userPanel = new UserPanel(DatabaseEntity.getUser(UserConfig.getConfig("user.username")));
+    private UserPanel userPanel = new UserPanel();
 
     private void initialize() {
         setLayout(card);
@@ -99,6 +100,70 @@ public class CorePanel extends JPanel {
                 initialize();
             }
         });
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                lessonTable.addRows(DatabaseEntity.getLessons());
+                return null;
+            }
+        }.execute();
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() {
+                classmateTable.addRows(DatabaseEntity.getClassmates());
+                return null;
+            }
+        }.execute();
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() {
+                teacherTable.addRows(DatabaseEntity.getTeachers());
+                return null;
+            }
+        }.execute();
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() {
+                classTable.addRows(DatabaseEntity.getClasses());
+                return null;
+            }
+        }.execute();
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() {
+                departmentTable.addRows(DatabaseEntity.getDepartments());
+                return null;
+            }
+        }.execute();
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() {
+                roomTable.addRows(DatabaseEntity.getRooms());
+                return null;
+            }
+        }.execute();
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() {
+                lessonTypeTable.addRows(DatabaseEntity.getLessonTypes());
+                return null;
+            }
+        }.execute();
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() {
+                examModeTable.addRows(DatabaseEntity.getExamModes());
+                return null;
+            }
+        }.execute();
+        new SwingWorker<Void,Void>(){
+            @Override
+            protected Void doInBackground() {
+                userPanel.setUser(DatabaseEntity.getUser(UserConfig.getConfig("user.username")));
+                return null;
+            }
+        }.execute();
+        // repaint();
     }
 
     public void showTab(String name) {

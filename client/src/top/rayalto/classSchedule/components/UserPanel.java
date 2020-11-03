@@ -11,7 +11,7 @@ import top.rayalto.classSchedule.dataTypes.User;
 public class UserPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    private User user;
+    private User user = null;
 
     private JLabel codeLabel = new JLabel("学号:");
     private JLabel passwordHashLabel = new JLabel("密码哈希:");
@@ -35,7 +35,7 @@ public class UserPanel extends JPanel {
     private JTextField homeAddressTextField = new JTextField();
     private JTextField mobilePhoneTextField = new JTextField();
 
-    private void initialize() {
+    private void initialize(User user) {
         codeLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         passwordHashLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
         realNameLabel.setFont(Sources.NOTO_SANS_MONO_FONT);
@@ -68,17 +68,6 @@ public class UserPanel extends JPanel {
         emailTextField.setFont(Sources.NOTO_SANS_MONO_FONT);
         homeAddressTextField.setFont(Sources.NOTO_SANS_MONO_FONT);
         mobilePhoneTextField.setFont(Sources.NOTO_SANS_MONO_FONT);
-
-        codeTextField.setText(user.code);
-        passwordHashTextField.setText(user.passwordHash);
-        realNameTextField.setText(user.realName);
-        genderTextField.setText(user.gender);
-        classTextField.setText(user.className);
-        majorTextField.setText(user.majorName);
-        departmentTextField.setText(user.departmentName);
-        emailTextField.setText(user.email);
-        homeAddressTextField.setText(user.homeAddress);
-        mobilePhoneTextField.setText(user.mobilePhone);
 
         setLayout(null);
         add(codeLabel);
@@ -122,15 +111,41 @@ public class UserPanel extends JPanel {
         homeAddressTextField.setBounds(85, 245, 500, 30);
         add(mobilePhoneTextField);
         mobilePhoneTextField.setBounds(85, 275, 500, 30);
+
+        if (user != null) {
+            setUser(user);
+            updateUserInfo();
+        }
+    }
+
+    public UserPanel() {
+        this(null);
     }
 
     public UserPanel(User user) {
-        this.user = user;
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                initialize();
+                initialize(user);
             }
         });
+    }
+
+    public void updateUserInfo() {
+        codeTextField.setText(user.code);
+        passwordHashTextField.setText(user.passwordHash);
+        realNameTextField.setText(user.realName);
+        genderTextField.setText(user.gender);
+        classTextField.setText(user.className);
+        majorTextField.setText(user.majorName);
+        departmentTextField.setText(user.departmentName);
+        emailTextField.setText(user.email);
+        homeAddressTextField.setText(user.homeAddress);
+        mobilePhoneTextField.setText(user.mobilePhone);
+
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

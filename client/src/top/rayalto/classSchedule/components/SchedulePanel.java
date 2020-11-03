@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import top.rayalto.classSchedule.Sources;
 import top.rayalto.classSchedule.dataTypes.ScheduleDetail;
@@ -33,11 +34,6 @@ public class SchedulePanel extends JPanel {
     private void initialize() {
         setLayout(null);
         setMinimumSize(MINIMUN_SIZE);
-        for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail(startDateString, endDateString)) {
-            ScheduleBlock block = new ScheduleBlock(scheduleDetail);
-            scheduleBlocks.add(block);
-            add(block);
-        }
     }
 
     public SchedulePanel() {
@@ -57,6 +53,22 @@ public class SchedulePanel extends JPanel {
                 initialize();
             }
         });
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                for (ScheduleDetail scheduleDetail : DatabaseEntity.getScheduleDetail(startDateString, endDateString)) {
+                    ScheduleBlock block = new ScheduleBlock(scheduleDetail);
+                    scheduleBlocks.add(block);
+                    add(block);
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                repaint();
+            }
+        }.execute();
     }
 
     public void useDate(String[] dateStrings) {
