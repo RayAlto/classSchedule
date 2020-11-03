@@ -33,6 +33,132 @@ import top.rayalto.classSchedule.dataTypes.SchoolClass;
 import top.rayalto.classSchedule.dataTypes.Teacher;
 import top.rayalto.classSchedule.dataTypes.User;
 
+class RoomQuery implements Runnable {
+    private Room room = null;
+    private int id;
+
+    public RoomQuery(int roomId) {
+        id = roomId;
+    }
+
+    @Override
+    public void run() {
+        room = DatabaseEntity.getRoom(id);
+    }
+
+    public Room getValue() {
+        return room;
+    }
+}
+
+class LessonTypeQuery implements Runnable {
+    private LessonType lessonType = null;
+    private int id;
+
+    public LessonTypeQuery(int lessonTypeId) {
+        id = lessonTypeId;
+    }
+
+    @Override
+    public void run() {
+        lessonType = DatabaseEntity.getLessonType(id);
+    }
+
+    public LessonType getValue() {
+        return lessonType;
+    }
+}
+
+class DepartmentQuery implements Runnable {
+    private Department department = null;
+    private int id;
+
+    public DepartmentQuery(int departmentId) {
+        id = departmentId;
+    }
+
+    @Override
+    public void run() {
+        department = DatabaseEntity.getDepartment(id);
+    }
+
+    public Department getValue() {
+        return department;
+    }
+}
+
+class ExamModeQuery implements Runnable {
+    private ExamMode examMode = null;
+    private int id;
+
+    public ExamModeQuery(int examModeId) {
+        id = examModeId;
+    }
+
+    @Override
+    public void run() {
+        examMode = DatabaseEntity.getExamMode(id);
+    }
+
+    public ExamMode getValue() {
+        return examMode;
+    }
+}
+
+class ClassesQuery implements Runnable {
+    private List<SchoolClass> schoolClasses = null;
+    private List<Integer> ids;
+
+    public ClassesQuery(List<Integer> classIds) {
+        ids = classIds;
+    }
+
+    @Override
+    public void run() {
+        schoolClasses = DatabaseEntity.getClasses(ids);
+    }
+
+    public List<SchoolClass> getValue() {
+        return schoolClasses;
+    }
+}
+
+class TeachersQuery implements Runnable {
+    private List<Teacher> teachers = null;
+    private List<Integer> ids;
+
+    public TeachersQuery(List<Integer> teacherIds) {
+        ids = teacherIds;
+    }
+
+    @Override
+    public void run() {
+        teachers = DatabaseEntity.getTeachers(ids);
+    }
+
+    public List<Teacher> getValue() {
+        return teachers;
+    }
+}
+
+class ClassmatesQuery implements Runnable {
+    private List<Classmate> teachers = null;
+    private List<String> codes;
+
+    public ClassmatesQuery(List<String> classmateCodes) {
+        codes = classmateCodes;
+    }
+
+    @Override
+    public void run() {
+        teachers = DatabaseEntity.getClassmates(codes);
+    }
+
+    public List<Classmate> getValue() {
+        return teachers;
+    }
+}
+
 public class DatabaseEntity {
 
     private static MariaDbPoolDataSource poolDataSource = new MariaDbPoolDataSource();
@@ -223,16 +349,29 @@ public class DatabaseEntity {
         List<ScheduleDetail> scheduleDetails = new ArrayList<ScheduleDetail>();
         List<Schedule> schedules = getSchedule(startDateString, endDateString);
         for (Schedule schedule : schedules) {
-            Room roomInfo = getRoom(schedule.roomId);
             Lesson lessonInfo = getLesson(schedule.lessonId);
-            LessonType lessonTypeInfo = getLessonType(lessonInfo.typeId);
-            Department departmentInfo = getDepartment(lessonInfo.departmentId);
-            ExamMode examModeInfo = getExamMode(lessonInfo.examModeId);
-            List<SchoolClass> classes = getClasses(getClassIdsFromLesson(lessonInfo.id));
-            List<Teacher> teachers = getTeachers(getTeachersFromLesson(lessonInfo.id));
-            List<Classmate> classmates = getClassmates(getClassmatesFromLesson(lessonInfo.id));
-            scheduleDetails.add(new ScheduleDetail(schedule, roomInfo, lessonInfo, lessonTypeInfo, departmentInfo,
-                    examModeInfo, classes, teachers, classmates));
+            RoomQuery roomQuery = new RoomQuery(schedule.roomId);
+            LessonTypeQuery lessonTypeQuery = new LessonTypeQuery(lessonInfo.typeId);
+            DepartmentQuery departmentQuery = new DepartmentQuery(lessonInfo.departmentId);
+            ExamModeQuery examModeQuery = new ExamModeQuery(lessonInfo.examModeId);
+            ClassesQuery classesQuery = new ClassesQuery(getClassIdsFromLesson(lessonInfo.id));
+            TeachersQuery teachersQuery = new TeachersQuery(getTeachersFromLesson(lessonInfo.id));
+            ClassmatesQuery classmatesQuery = new ClassmatesQuery(getClassmatesFromLesson(lessonInfo.id));
+            Thread[] queries = { new Thread(roomQuery), new Thread(lessonTypeQuery), new Thread(departmentQuery),
+                    new Thread(examModeQuery), new Thread(classesQuery), new Thread(teachersQuery),
+                    new Thread(classmatesQuery) };
+            for (Thread thread : queries) {
+                thread.start();
+            }
+            try {
+                for (Thread thread : queries) {
+                    thread.join();
+                }
+            } catch (InterruptedException ignore) {
+            }
+            scheduleDetails.add(new ScheduleDetail(schedule, roomQuery.getValue(), lessonInfo,
+                    lessonTypeQuery.getValue(), departmentQuery.getValue(), examModeQuery.getValue(),
+                    classesQuery.getValue(), teachersQuery.getValue(), classmatesQuery.getValue()));
         }
         return scheduleDetails;
     }
@@ -241,8 +380,8 @@ public class DatabaseEntity {
         List<ScheduleDetail> scheduleDetails = new ArrayList<ScheduleDetail>();
         List<Schedule> schedules = getSchedule(dateString);
         for (Schedule schedule : schedules) {
-            Room roomInfo = getRoom(schedule.roomId);
             Lesson lessonInfo = getLesson(schedule.lessonId);
+            Room roomInfo = getRoom(schedule.roomId);
             LessonType lessonTypeInfo = getLessonType(lessonInfo.typeId);
             Department departmentInfo = getDepartment(lessonInfo.departmentId);
             ExamMode examModeInfo = getExamMode(lessonInfo.examModeId);
