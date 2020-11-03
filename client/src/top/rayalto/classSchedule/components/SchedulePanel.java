@@ -84,6 +84,8 @@ public class SchedulePanel extends JPanel {
             scheduleBlocks.add(block);
             add(block);
         }
+        this.startDateString = startDateString;
+        this.endDateString = endDateString;
         repaint();
     }
 
