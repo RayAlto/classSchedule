@@ -114,8 +114,8 @@ public class ScheduleBlock extends JButton {
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint background = new GradientPaint(0, 0, new Color(218, 226, 248), 0, getHeight(),
-                new Color(214, 164, 164));
+        GradientPaint background = new GradientPaint(0, 0, new Color(142, 158, 171), 0, getHeight(),
+                new Color(238, 242, 243));
         g2d.setPaint(background);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
         super.paintComponent(g);
