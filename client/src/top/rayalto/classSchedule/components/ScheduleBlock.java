@@ -124,14 +124,14 @@ public class ScheduleBlock extends JButton {
     public float getStartTimeValue() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(scheduleDetail.scheduleInfo.startTime);
-        return ((calendar.get(Calendar.HOUR) - 8) * 60 + calendar.get(Calendar.MINUTE)) / 840.0f;
+        return ((calendar.get(Calendar.HOUR_OF_DAY) - 8) * 60 + calendar.get(Calendar.MINUTE)) / 840.0f;
     }
 
     public float getDurationValue() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(
                 scheduleDetail.scheduleInfo.endTime.getTime() - scheduleDetail.scheduleInfo.startTime.getTime());
-        return ((calendar.get(Calendar.HOUR) - 8) * 60 + calendar.get(Calendar.MINUTE)) / 840.0f;
+        return ((calendar.get(Calendar.HOUR_OF_DAY) - 8) * 60 + calendar.get(Calendar.MINUTE)) / 840.0f;
     }
 
     public int getWeekDayValue() {
