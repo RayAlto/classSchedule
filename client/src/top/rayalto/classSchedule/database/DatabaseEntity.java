@@ -181,11 +181,11 @@ public class DatabaseEntity {
     static {
         dateFormat.setLenient(false);
         try {
-            poolDataSource.setServerName("www.rayalto.top");
-            poolDataSource.setPortNumber(8306);
+            poolDataSource.setServerName("127.0.0.1");
+            poolDataSource.setPortNumber(3306);
             poolDataSource.setDatabaseName("classSchedule");
-            poolDataSource.setUser("rayalto");
-            poolDataSource.setPassword("WoCaoNiMa123+++mysql");
+            poolDataSource.setUser("root");
+            poolDataSource.setPassword("root");
         } catch (SQLException e) {
             e.printStackTrace();
         }
